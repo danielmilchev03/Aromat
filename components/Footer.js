@@ -16,30 +16,30 @@ export default function Footer() {
           {/* Explore */}
           <div>
             <h4 className="font-serif text-sm uppercase tracking-widest mb-4">Explore</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><Link href="/" className="hover:text-accent transition-colors">Home</Link></li>
-              <li><Link href="/gallery" className="hover:text-accent transition-colors">Gallery</Link></li>
-              <li><Link href="/search" className="hover:text-accent transition-colors">Search</Link></li>
+            <ul className="space-y-2 text-sm">
+              <li><Link href="/" className="text-accent hover:text-white transition-colors">Home</Link></li>
+              <li><Link href="/gallery" className="text-accent hover:text-white transition-colors">Gallery</Link></li>
+              <li><Link href="/search" className="text-accent hover:text-white transition-colors">Search</Link></li>
             </ul>
           </div>
 
           {/* Collections */}
           <div>
             <h4 className="font-serif text-sm uppercase tracking-widest mb-4">Collections</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><Link href="/collections/top-rated" className="hover:text-accent transition-colors">Top Rated</Link></li>
-              <li><Link href="/collections/most-popular" className="hover:text-accent transition-colors">Most Popular</Link></li>
-              <li><Link href="/collections/new-arrivals" className="hover:text-accent transition-colors">New Arrivals</Link></li>
+            <ul className="space-y-2 text-sm">
+              <li><Link href="/collections/top-rated" className="text-accent hover:text-white transition-colors">Top Rated</Link></li>
+              <li><Link href="/collections/most-popular" className="text-accent hover:text-white transition-colors">Most Popular</Link></li>
+              <li><Link href="/collections/new-arrivals" className="text-accent hover:text-white transition-colors">New Arrivals</Link></li>
             </ul>
           </div>
 
           {/* About */}
           <div>
             <h4 className="font-serif text-sm uppercase tracking-widest mb-4">About</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><Link href="/about" className="hover:text-accent transition-colors">About Aromat</Link></li>
-              <li><Link href="/contact" className="hover:text-accent transition-colors">Contact</Link></li>
-              <li><Link href="/privacy" className="hover:text-accent transition-colors">Privacy</Link></li>
+            <ul className="space-y-2 text-sm">
+              <li><Link href="/about" className="text-accent hover:text-white transition-colors">About Aromat</Link></li>
+              <li><Link href="/contact" className="text-accent hover:text-white transition-colors">Contact</Link></li>
+              <li><Link href="/privacy" className="text-accent hover:text-white transition-colors">Privacy</Link></li>
             </ul>
           </div>
         </div>

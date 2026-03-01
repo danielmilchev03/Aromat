@@ -5,21 +5,51 @@ import { getRandomPerfumes, getTopRatedPerfumes, getUniqueBrands } from '../lib/
 import PerfumeCard from '../components/PerfumeCard';
 import Footer from '../components/Footer';
 
+const API_BASE = process.env.NEXT_PUBLIC_PERFUMAPI_URL || 'https://perfumapidatabase.onrender.com';
+
 export default function Gallery({ featured = [], topRated = [], brands = [] }) {
   const [filterBrand, setFilterBrand] = useState('all');
   const [displayMode, setDisplayMode] = useState('featured'); // featured, toprated, all
+  const [allPerfumes, setAllPerfumes] = useState([]);
+  const [showAll, setShowAll] = useState(false);
+  const [loadingAll, setLoadingAll] = useState(false);
+
+  const handleViewAll = async () => {
+    if (allPerfumes.length > 0) {
+      setShowAll(true);
+      setDisplayMode('all');
+      return;
+    }
+    setLoadingAll(true);
+    try {
+      const res = await fetch(`${API_BASE}/perfumes?limit=500&offset=0`);
+      const data = await res.json();
+      setAllPerfumes(data.perfumes || []);
+      setShowAll(true);
+      setDisplayMode('all');
+    } catch (err) {
+      console.error('Error fetching all perfumes:', err);
+    } finally {
+      setLoadingAll(false);
+    }
+  };
 
   const getDisplayPerfumes = () => {
     switch (displayMode) {
       case 'toprated':
         return topRated;
+      case 'all':
+        return allPerfumes;
       case 'featured':
       default:
         return featured;
     }
   };
 
-  const displayPerfumes = getDisplayPerfumes();
+  const perfumesBeforeFilter = getDisplayPerfumes();
+  const displayPerfumes = filterBrand === 'all'
+    ? perfumesBeforeFilter
+    : perfumesBeforeFilter.filter(p => p.brand === filterBrand);
 
   return (
     <>
@@ -61,6 +91,7 @@ export default function Gallery({ featured = [], topRated = [], brands = [] }) {
                 {[
                   { id: 'featured', label: 'Featured' },
                   { id: 'toprated', label: 'Top Rated' },
+                  ...(showAll ? [{ id: 'all', label: 'All Perfumes' }] : []),
                 ].map((mode) => (
                   <button
                     key={mode.id}
@@ -115,11 +146,49 @@ export default function Gallery({ featured = [], topRated = [], brands = [] }) {
         <section className="py-16">
           <div className="max-w-6xl mx-auto px-6">
             {displayPerfumes.length > 0 ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {displayPerfumes.map((perfume, idx) => (
-                  <PerfumeCard key={idx} perfume={perfume} featured={displayMode === 'featured'} />
-                ))}
-              </div>
+              <>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {displayPerfumes.map((perfume, idx) => (
+                    <PerfumeCard key={perfume.id || idx} perfume={perfume} featured={displayMode === 'featured'} />
+                  ))}
+                </div>
+
+                {/* View All Button */}
+                {!showAll && displayMode !== 'all' && (
+                  <div className="mt-16 text-center">
+                    <button
+                      onClick={handleViewAll}
+                      disabled={loadingAll}
+                      className="group inline-flex items-center gap-2 px-10 py-4 border-2 border-accent text-accent font-serif text-lg hover:bg-accent hover:text-white transition-colors disabled:opacity-50 disabled:cursor-wait"
+                    >
+                      {loadingAll ? (
+                        <>
+                          <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                          </svg>
+                          Loading All Perfumes…
+                        </>
+                      ) : (
+                        <>
+                          View All Perfumes
+                          <svg className="w-5 h-5 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+
+                {showAll && displayMode === 'all' && (
+                  <div className="mt-12 text-center">
+                    <p className="text-gray-500 font-serif text-sm tracking-wide">
+                      Showing all {displayPerfumes.length} fragrances
+                    </p>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="text-center py-16">
                 <p className="text-gray-600 text-lg">No fragrances found in this category</p>
@@ -129,18 +198,20 @@ export default function Gallery({ featured = [], topRated = [], brands = [] }) {
         </section>
 
         {/* CTA Section */}
-        <section className="bg-black text-white py-16 border-t border-gray-200">
+        <section className="bg-gray-50 border-t border-gray-200 py-16">
           <div className="max-w-6xl mx-auto px-6 text-center space-y-8">
-            <div>
-              <h2 className="font-serif text-4xl mb-4">Discover Your Signature Scent</h2>
-              <p className="text-gray-300 text-lg mb-8">
-                Use our advanced search to find the perfect fragrance
-              </p>
+            <h2 className="font-serif text-3xl text-black">Discover Your Signature Scent</h2>
+            <p className="text-gray-600 text-lg">
+              Use our advanced search to find the perfect fragrance
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link href="/" className="px-8 py-3 border-2 border-accent text-accent font-serif hover:bg-accent hover:text-white transition-colors">
+                Explore Fragrances
+              </Link>
+              <Link href="/search" className="px-8 py-3 border-2 border-accent text-accent font-serif hover:bg-accent hover:text-white transition-colors">
+                Advanced Search
+              </Link>
             </div>
-            
-            <Link href="/" className="inline-block px-8 py-3 bg-accent text-black font-serif hover:bg-yellow-600 transition-colors">
-              Explore Fragrances
-            </Link>
           </div>
         </section>
 

@@ -80,7 +80,7 @@ export default function TopRated({ perfumes = [] }) {
               <Link href="/collections/new-arrivals" className="px-8 py-3 border-2 border-accent text-accent font-serif hover:bg-accent hover:text-white transition-colors">
                 New Arrivals
               </Link>
-              <Link href="/gallery" className="px-8 py-3 border-2 border-gray-300 text-gray-700 font-serif hover:border-accent hover:text-accent transition-colors">
+              <Link href="/gallery" className="px-8 py-3 border-2 border-accent text-accent font-serif hover:bg-accent hover:text-white transition-colors">
                 Full Gallery
               </Link>
             </div>

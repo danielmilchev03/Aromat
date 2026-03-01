@@ -44,11 +44,13 @@ export default function SearchResults({ initialResults = [], query = '' }) {
     }
   };
 
+  const hasSearched = !!lastFetchedQuery;
+
   return (
     <>
       <Head>
-        <title>Search Results for "{query}" | Aromat</title>
-        <meta name="description" content={`Search results for ${query} on Aromat fragrance encyclopedia`} />
+        <title>{hasSearched ? `Search Results for "${lastFetchedQuery}" | Aromat` : 'Search | Aromat'}</title>
+        <meta name="description" content={hasSearched ? `Search results for ${lastFetchedQuery} on Aromat fragrance encyclopedia` : 'Search the Aromat fragrance encyclopedia'} />
       </Head>
 
       <main className="min-h-screen bg-white">
@@ -68,12 +70,15 @@ export default function SearchResults({ initialResults = [], query = '' }) {
         <section className="bg-gradient-to-b from-white to-gray-50 py-12 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
             <div className="max-w-2xl mx-auto space-y-6">
-              <h1 className="font-serif text-4xl text-black text-center">Search Results</h1>
+              <h1 className="font-serif text-4xl text-black text-center">{hasSearched ? 'Search Results' : 'Search'}</h1>
+              {!hasSearched && (
+                <p className="text-center text-gray-600 text-lg">Find fragrances by name or brand</p>
+              )}
               
               <form onSubmit={handleNewSearch} className="relative">
                 <input
                   type="text"
-                  placeholder="Search again..."
+                  placeholder="Search by name or brand..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full px-6 py-4 text-lg border-2 border-gray-300 focus:border-accent focus:outline-none transition-colors"
@@ -86,17 +91,19 @@ export default function SearchResults({ initialResults = [], query = '' }) {
                 </button>
               </form>
 
-              <p className="text-center text-gray-600">
-                {loading ? (
-                  'Searching...'
-                ) : results.length > 0 ? (
-                  <>
-                    Found <span className="font-serif text-accent">{results.length}</span> fragrance{results.length !== 1 ? 's' : ''}
-                  </>
-                ) : (
-                  'No results found'
-                )}
-              </p>
+              {(loading || hasSearched) && (
+                <p className="text-center text-gray-600">
+                  {loading ? (
+                    'Searching...'
+                  ) : results.length > 0 ? (
+                    <>
+                      Found <span className="font-serif text-accent">{results.length}</span> fragrance{results.length !== 1 ? 's' : ''}
+                    </>
+                  ) : (
+                    <>No results found for "{lastFetchedQuery}"</>
+                  )}
+                </p>
+              )}
             </div>
           </div>
         </section>
@@ -114,22 +121,22 @@ export default function SearchResults({ initialResults = [], query = '' }) {
                   <PerfumeCard key={idx} perfume={perfume} />
                 ))}
               </div>
-            ) : (
+            ) : hasSearched ? (
               <div className="text-center py-16 space-y-6">
                 <h2 className="font-serif text-2xl text-black">No Fragrances Found</h2>
                 <p className="text-gray-600 max-w-md mx-auto">
-                  We couldn't find any fragrances matching "{query}". Try searching with different keywords.
+                  We couldn't find any fragrances matching "{lastFetchedQuery}". Try searching with different keywords.
                 </p>
                 <Link href="/" className="inline-block mt-8 px-8 py-3 bg-accent text-white font-serif hover:bg-yellow-600 transition-colors">
                   ← Back to Home
                 </Link>
               </div>
-            )}
+            ) : null}
           </div>
         </section>
 
         {/* Tips Section */}
-        {results.length === 0 && (
+        {results.length === 0 && !loading && (
           <section className="bg-gray-50 py-16 border-t border-gray-200">
             <div className="max-w-2xl mx-auto px-6 space-y-8">
               <h3 className="font-serif text-2xl text-black text-center">Search Tips</h3>

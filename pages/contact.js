@@ -167,6 +167,22 @@ export default function Contact() {
           </div>
         </section>
 
+        {/* CTA */}
+        <section className="bg-gray-50 border-t border-gray-200 py-16">
+          <div className="max-w-4xl mx-auto px-6 text-center space-y-8">
+            <h2 className="font-serif text-3xl text-black">Explore Fragrances</h2>
+            <p className="text-gray-600 text-lg">While you wait for our reply, discover something beautiful.</p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link href="/gallery" className="px-8 py-3 border-2 border-accent text-accent font-serif hover:bg-accent hover:text-white transition-colors">
+                Browse Gallery
+              </Link>
+              <Link href="/collections/top-rated" className="px-8 py-3 border-2 border-accent text-accent font-serif hover:bg-accent hover:text-white transition-colors">
+                Top Rated
+              </Link>
+            </div>
+          </div>
+        </section>
+
         <Footer />
       </main>
     </>

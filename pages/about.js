@@ -109,15 +109,15 @@ export default function About() {
         </section>
 
         {/* CTA */}
-        <section className="bg-black text-white py-16">
+        <section className="bg-gray-50 border-t border-gray-200 py-16">
           <div className="max-w-4xl mx-auto px-6 text-center space-y-8">
-            <h2 className="font-serif text-4xl">Start Exploring</h2>
-            <p className="text-gray-400 text-lg">Discover your next signature scent.</p>
+            <h2 className="font-serif text-3xl text-black">Start Exploring</h2>
+            <p className="text-gray-600 text-lg">Discover your next signature scent.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/gallery" className="px-8 py-3 bg-accent text-black font-serif hover:bg-yellow-600 transition-colors">
+              <Link href="/gallery" className="px-8 py-3 border-2 border-accent text-accent font-serif hover:bg-accent hover:text-white transition-colors">
                 Browse Gallery
               </Link>
-              <Link href="/" className="px-8 py-3 border border-gray-700 text-gray-300 font-serif hover:border-accent hover:text-accent transition-colors">
+              <Link href="/" className="px-8 py-3 border-2 border-accent text-accent font-serif hover:bg-accent hover:text-white transition-colors">
                 Go Home
               </Link>
             </div>
