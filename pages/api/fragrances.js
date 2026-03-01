@@ -1,7 +1,7 @@
 import { getPerfumes, getPerfumeById, getTopRatedPerfumes, getRandomPerfumes } from '../../lib/api';
 
 export default async function handler(req, res) {
-  const { type = 'featured', limit = 12, offset = 0, id } = req.query;
+  const { type = 'featured', limit = 12, offset = 0, id, gender = 'all' } = req.query;
 
   try {
     // Single perfume lookup by id
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     
     switch (type) {
       case 'toprated':
-        results = await getTopRatedPerfumes(parseInt(limit));
+        results = await getTopRatedPerfumes(parseInt(limit), gender);
         res.status(200).json(results);
         break;
       case 'all': {

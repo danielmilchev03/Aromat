@@ -39,7 +39,6 @@ export default function Navbar() {
   const navLinks = [
     { href: '/gallery', label: 'Gallery' },
     { href: '/search', label: 'Search' },
-    { href: '/collections/top-rated', label: 'Top Rated' },
     { href: '/about', label: 'About' },
   ];
 

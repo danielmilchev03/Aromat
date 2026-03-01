@@ -1,50 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { getRandomPerfumes, getTopRatedPerfumes, getUniqueBrands } from '../lib/api';
+import { getPerfumes, getTopRatedPerfumes, getUniqueBrands } from '../lib/api';
 import PerfumeCard from '../components/PerfumeCard';
 import Navbar from '../components/Navbar';
 import FilterBar, { applyFilters, extractBrands } from '../components/FilterBar';
 import Footer from '../components/Footer';
 
-const API_BASE = process.env.NEXT_PUBLIC_PERFUMAPI_URL || 'https://perfumapidatabase.onrender.com';
-
-export default function Gallery({ featured = [], topRated = [], brands = [] }) {
+export default function Gallery({ topRated = [], allPerfumes = [], brands = [] }) {
   const [filters, setFilters] = useState({ gender: 'all', brand: 'all', sort: 'default' });
-  const [displayMode, setDisplayMode] = useState('featured');
-  const [allPerfumes, setAllPerfumes] = useState([]);
-  const [showAll, setShowAll] = useState(false);
-  const [loadingAll, setLoadingAll] = useState(false);
+  const [displayMode, setDisplayMode] = useState('toprated');
+  const [genderTopRated, setGenderTopRated] = useState(topRated);
+  const [loadingTopRated, setLoadingTopRated] = useState(false);
 
-  const handleViewAll = async () => {
-    if (allPerfumes.length > 0) {
-      setShowAll(true);
-      setDisplayMode('all');
+  // Re-fetch top-rated when gender filter changes so we get top 24 for that gender
+  useEffect(() => {
+    if (displayMode !== 'toprated') return;
+
+    if (filters.gender === 'all') {
+      setGenderTopRated(topRated);
       return;
     }
-    setLoadingAll(true);
-    try {
-      const res = await fetch(`${API_BASE}/perfumes?limit=500&offset=0`);
-      const data = await res.json();
-      setAllPerfumes(data.perfumes || []);
-      setShowAll(true);
-      setDisplayMode('all');
-    } catch (err) {
-      console.error('Error fetching all perfumes:', err);
-    } finally {
-      setLoadingAll(false);
-    }
-  };
+
+    let cancelled = false;
+    setLoadingTopRated(true);
+    fetch(`/api/fragrances?type=toprated&limit=24&gender=${encodeURIComponent(filters.gender)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (!cancelled) setGenderTopRated(data);
+      })
+      .catch(() => {
+        if (!cancelled) setGenderTopRated([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingTopRated(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [filters.gender, displayMode, topRated]);
 
   const getDisplayPerfumes = () => {
     switch (displayMode) {
-      case 'toprated':
-        return topRated;
       case 'all':
         return allPerfumes;
-      case 'featured':
+      case 'toprated':
       default:
-        return featured;
+        return genderTopRated;
     }
   };
 
@@ -52,7 +53,11 @@ export default function Gallery({ featured = [], topRated = [], brands = [] }) {
   const allBrands = extractBrands(perfumesBeforeFilter).length > 0
     ? extractBrands(perfumesBeforeFilter)
     : brands;
-  const displayPerfumes = applyFilters(perfumesBeforeFilter, filters);
+  // For top-rated mode, gender filtering is already done server-side; only apply brand/sort
+  const filtersForApply = displayMode === 'toprated'
+    ? { ...filters, gender: 'all' }
+    : filters;
+  const displayPerfumes = applyFilters(perfumesBeforeFilter, filtersForApply);
 
   return (
     <>
@@ -83,9 +88,8 @@ export default function Gallery({ featured = [], topRated = [], brands = [] }) {
             <div className="flex gap-2 flex-wrap items-center">
               <span className="text-[10px] text-gray-400 uppercase tracking-[0.15em] font-medium mr-2">View:</span>
               {[
-                { id: 'featured', label: 'Featured' },
                 { id: 'toprated', label: 'Top Rated' },
-                ...(showAll ? [{ id: 'all', label: 'All Perfumes' }] : []),
+                { id: 'all', label: 'All Perfumes' },
               ].map((mode) => (
                 <button
                   key={mode.id}
@@ -118,49 +122,24 @@ export default function Gallery({ featured = [], topRated = [], brands = [] }) {
                 <p className="text-gray-400 text-sm mb-8 text-center">{displayPerfumes.length} fragrances</p>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {displayPerfumes.map((perfume, idx) => (
-                    <PerfumeCard key={perfume.id || idx} perfume={perfume} featured={displayMode === 'featured'} />
+                    <div key={perfume.id || idx} className="relative">
+                      {displayMode === 'toprated' && idx < 3 && (
+                        <div className="absolute -top-3 -left-3 z-10 w-8 h-8 bg-accent text-white text-sm font-serif flex items-center justify-center rounded-full shadow-md">
+                          {idx + 1}
+                        </div>
+                      )}
+                      <PerfumeCard perfume={perfume} featured={displayMode === 'toprated' && idx < 3} />
+                    </div>
                   ))}
                 </div>
 
-                {/* View All Button */}
-                {!showAll && displayMode !== 'all' && (
-                  <div className="mt-16 text-center">
-                    <button
-                      onClick={handleViewAll}
-                      disabled={loadingAll}
-                      className="btn-secondary text-base disabled:opacity-50 disabled:cursor-wait"
-                    >
-                      {loadingAll ? (
-                        <>
-                          <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                          </svg>
-                          Loading...
-                        </>
-                      ) : (
-                        <>
-                          View All Perfumes
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                )}
 
-                {showAll && displayMode === 'all' && (
-                  <div className="mt-12 text-center">
-                    <p className="text-gray-400 text-sm">
-                      Showing all {displayPerfumes.length} fragrances
-                    </p>
-                  </div>
-                )}
               </>
             ) : (
               <div className="text-center py-20">
-                <p className="text-gray-400 text-lg">No fragrances found</p>
+                <p className="text-gray-400 text-lg">
+                  {loadingTopRated && displayMode === 'toprated' ? 'Loading fragrances...' : 'No fragrances found'}
+                </p>
               </div>
             )}
           </div>
@@ -187,14 +166,15 @@ export default function Gallery({ featured = [], topRated = [], brands = [] }) {
 
 export async function getServerSideProps() {
   try {
-    const featured = await getRandomPerfumes(12);
-    const topRated = await getTopRatedPerfumes(12);
+    const topRated = await getTopRatedPerfumes(24);
+    const allData = await getPerfumes(500, 0);
+    const allPerfumes = allData.perfumes || [];
     const brands = await getUniqueBrands();
 
     return {
       props: {
-        featured,
         topRated,
+        allPerfumes,
         brands,
       },
     };
@@ -202,8 +182,8 @@ export async function getServerSideProps() {
     console.error('Error in getServerSideProps:', error);
     return {
       props: {
-        featured: [],
         topRated: [],
+        allPerfumes: [],
         brands: [],
       },
     };

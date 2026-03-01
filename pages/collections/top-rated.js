@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { getTopRatedPerfumes } from '../../lib/api';
@@ -9,8 +9,37 @@ import Footer from '../../components/Footer';
 
 export default function TopRated({ perfumes = [] }) {
   const [filters, setFilters] = useState({ gender: 'all', brand: 'all', sort: 'default' });
-  const brands = extractBrands(perfumes);
-  const filtered = applyFilters(perfumes, filters);
+  const [genderPerfumes, setGenderPerfumes] = useState(perfumes);
+  const [loading, setLoading] = useState(false);
+
+  // Re-fetch top-rated when gender filter changes so we get top 24 for that gender
+  useEffect(() => {
+    if (filters.gender === 'all') {
+      setGenderPerfumes(perfumes);
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+    fetch(`/api/fragrances?type=toprated&limit=24&gender=${encodeURIComponent(filters.gender)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (!cancelled) setGenderPerfumes(data);
+      })
+      .catch(() => {
+        if (!cancelled) setGenderPerfumes([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [filters.gender, perfumes]);
+
+  const brands = extractBrands(genderPerfumes);
+  // Gender filtering already applied server-side; only apply brand/sort client-side
+  const filtersForApply = { ...filters, gender: 'all' };
+  const filtered = applyFilters(genderPerfumes, filtersForApply);
   return (
     <>
       <Head>
@@ -61,7 +90,9 @@ export default function TopRated({ perfumes = [] }) {
               </>
             ) : (
               <div className="text-center py-16">
-                <p className="text-gray-600 text-lg">Loading top rated fragrances...</p>
+                <p className="text-gray-600 text-lg">
+                  {loading ? 'Loading top rated fragrances...' : 'No fragrances found'}
+                </p>
               </div>
             )}
           </div>
