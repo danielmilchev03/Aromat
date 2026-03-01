@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { getPerfumeById, searchPerfumes } from '../../lib/api';
 import ScentPyramid from '../../components/ScentPyramid';
+import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
 export default function PerfumePage({ perfume, suggestions }) {
@@ -12,10 +13,13 @@ export default function PerfumePage({ perfume, suggestions }) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6">
         <div className="text-center space-y-6">
+          <div className="w-16 h-16 mx-auto rounded-full bg-gray-100 flex items-center justify-center mb-4">
+            <span className="text-gray-400 text-2xl">?</span>
+          </div>
           <h1 className="font-serif text-4xl text-black">Fragrance Not Found</h1>
-          <p className="text-gray-600">We couldn&apos;t find the fragrance you&apos;re looking for.</p>
-          <Link href="/" className="inline-block mt-6 px-8 py-3 bg-accent text-white font-serif hover:bg-yellow-600 transition-colors">
-            ← Back to Home
+          <p className="text-gray-500">We couldn&apos;t find the fragrance you&apos;re looking for.</p>
+          <Link href="/" className="btn-primary inline-flex mt-6">
+            &larr; Back to Home
           </Link>
         </div>
       </div>
@@ -47,104 +51,107 @@ export default function PerfumePage({ perfume, suggestions }) {
       </Head>
 
       <main className="min-h-screen bg-white">
-        {/* Navigation */}
-        <nav className="border-b border-gray-200">
-          <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link href="/" className="font-serif text-2xl text-black hover:text-accent transition-colors">
-              Aromat
-            </Link>
-            <Link href="/" className="text-gray-600 hover:text-black transition-colors">
-              ← Back
-            </Link>
-          </div>
-        </nav>
+        <Navbar />
 
         {/* Hero Section */}
-        <section className="border-b border-gray-200 py-16">
+        <section className="pt-24 pb-16">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="grid md:grid-cols-2 gap-12 items-start">
-              
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 text-sm text-gray-400 mb-10">
+              <Link href="/" className="hover:text-accent transition-colors">Home</Link>
+              <span>/</span>
+              <Link href="/gallery" className="hover:text-accent transition-colors">Gallery</Link>
+              <span>/</span>
+              <span className="text-gray-600 truncate max-w-[200px]">{perfume.name}</span>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-start">
+
               {/* Image Column */}
-              <div className="flex flex-col items-center justify-center bg-gray-50 aspect-square rounded-lg overflow-hidden">
-                {perfume.image_url ? (
-                  <img
-                    src={perfume.image_url}
-                    alt={perfume.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="text-center">
-                    <p className="text-4xl text-gray-300 mb-4">✦</p>
-                    <p className="text-gray-400 font-serif">Fragrance Preview</p>
-                  </div>
-                )}
+              <div className="animate-fade-in">
+                <div className="bg-gray-50 rounded-2xl overflow-hidden aspect-square sticky top-24">
+                  {perfume.image_url ? (
+                    <img
+                      src={perfume.image_url}
+                      alt={perfume.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="w-16 h-16 mx-auto rounded-full bg-accent/10 flex items-center justify-center mb-3">
+                          <span className="text-accent text-2xl">✦</span>
+                        </div>
+                        <p className="text-gray-400 font-serif text-sm">No Image Available</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Info Column */}
-              <div className="space-y-6">
-                
+              <div className="space-y-6 animate-fade-in-up">
+
                 {/* Brand & Name */}
-                <div>
-                  <p className="text-accent text-sm font-serif tracking-widest uppercase mb-2">
+                <div className="space-y-3">
+                  <p className="text-accent text-xs font-serif tracking-[0.25em] uppercase font-medium">
                     {perfume.brand || 'Brand'}
                   </p>
-                  <h1 className="font-serif text-5xl text-black leading-tight">
+                  <h1 className="font-serif text-4xl md:text-5xl text-black leading-tight">
                     {perfume.name}
                   </h1>
-                  <p className="text-lg text-gray-600 mt-4">by {perfume.brand || 'Unknown'}</p>
                 </div>
 
-                {/* Meta Info */}
+                {/* Meta Pills */}
                 {(perfume.gender || perfume.release_year) && (
-                  <div className="flex gap-4 text-sm text-gray-600">
+                  <div className="flex gap-2.5 flex-wrap">
                     {perfume.gender && (
-                      <span className="px-3 py-1 bg-gray-100 rounded font-serif">{perfume.gender}</span>
+                      <span className="px-4 py-1.5 bg-gray-50 text-gray-600 text-sm rounded-full border border-gray-100 font-serif">{perfume.gender}</span>
                     )}
                     {perfume.release_year && (
-                      <span className="px-3 py-1 bg-gray-100 rounded font-serif">{perfume.release_year}</span>
+                      <span className="px-4 py-1.5 bg-gray-50 text-gray-600 text-sm rounded-full border border-gray-100 font-serif">{perfume.release_year}</span>
                     )}
                   </div>
                 )}
 
                 {/* Rating & Stats */}
-                <div className="space-y-4 py-6 border-t border-b border-gray-200">
+                <div className="space-y-5 py-6 border-t border-b border-gray-100">
                   {rating > 0 && (
                     <div className="flex items-center gap-4">
-                      <div className="text-lg font-serif text-gray-800">Rating</div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         <div className="flex">
                           {[...Array(5)].map((_, i) => (
                             <span
                               key={i}
-                              className={`text-xl ${i < Math.floor(rating) ? 'text-accent' : 'text-gray-300'}`}
+                              className={`text-lg ${i < Math.floor(rating) ? 'text-accent' : 'text-gray-200'}`}
                             >
                               ★
                             </span>
                           ))}
                         </div>
-                        <span className="text-gray-600 text-lg font-serif">{rating.toFixed(1)}/5</span>
+                        <span className="text-gray-800 text-lg font-serif ml-2">{rating.toFixed(1)}</span>
+                        <span className="text-gray-400 text-sm">/ 5</span>
                       </div>
-                    </div>
-                  )}
-
-                  {perfume.votes > 0 && (
-                    <div className="text-sm text-gray-600">
-                      <span className="font-serif text-gray-800">{perfume.votes.toLocaleString()}</span> votes
+                      {perfume.votes > 0 && (
+                        <span className="text-gray-400 text-sm">
+                          ({perfume.votes.toLocaleString()} votes)
+                        </span>
+                      )}
                     </div>
                   )}
 
                   {/* Longevity & Sillage */}
-                  <div className="flex gap-6">
+                  <div className="flex gap-8">
                     {perfume.longevity && (
                       <div>
-                        <p className="text-xs text-gray-500 uppercase font-serif tracking-wide">Longevity</p>
-                        <p className="text-sm text-gray-800 font-serif">{perfume.longevity}</p>
+                        <p className="text-[10px] text-gray-400 uppercase tracking-[0.15em] font-medium mb-1">Longevity</p>
+                        <p className="text-sm text-gray-800 font-medium">{perfume.longevity}</p>
                       </div>
                     )}
                     {perfume.sillage && (
                       <div>
-                        <p className="text-xs text-gray-500 uppercase font-serif tracking-wide">Sillage</p>
-                        <p className="text-sm text-gray-800 font-serif">{perfume.sillage}</p>
+                        <p className="text-[10px] text-gray-400 uppercase tracking-[0.15em] font-medium mb-1">Sillage</p>
+                        <p className="text-sm text-gray-800 font-medium">{perfume.sillage}</p>
                       </div>
                     )}
                   </div>
@@ -154,28 +161,33 @@ export default function PerfumePage({ perfume, suggestions }) {
                 {perfume.description && (
                   <div className="space-y-3">
                     <h3 className="font-serif text-lg text-black">About this Fragrance</h3>
-                    <p className="text-gray-700 leading-relaxed text-sm line-clamp-4">
+                    <p className="text-gray-500 leading-relaxed text-sm line-clamp-4">
                       {perfume.description}
                     </p>
                   </div>
                 )}
 
                 {/* Actions */}
-                <div className="flex gap-4 pt-4">
+                <div className="flex gap-3 pt-2">
                   <button
                     onClick={handleCopyUrl}
-                    className="flex-1 py-3 border-2 border-accent text-accent font-serif hover:bg-accent hover:text-white transition-colors"
+                    className="flex-1 btn-secondary text-sm"
                   >
-                    {copied ? '✓ Copied' : 'Share'}
+                    {copied ? (
+                      <><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg> Copied</>
+                    ) : (
+                      <><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg> Share</>
+                    )}
                   </button>
                   {perfume.perfume_url && (
                     <a
                       href={perfume.perfume_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 py-3 bg-accent text-white font-serif hover:bg-yellow-600 transition-colors text-center"
+                      className="flex-1 btn-primary text-sm"
                     >
                       View Source
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                     </a>
                   )}
                 </div>
@@ -186,7 +198,7 @@ export default function PerfumePage({ perfume, suggestions }) {
 
         {/* Scent Pyramid Section */}
         {hasNotes && (
-          <section className="py-20 border-b border-gray-200">
+          <section className="py-20 bg-light-bg">
             <div className="max-w-6xl mx-auto px-6">
               <ScentPyramid
                 notes_top={perfume.notes_top || []}
@@ -199,10 +211,10 @@ export default function PerfumePage({ perfume, suggestions }) {
 
         {/* Full Description Section */}
         {perfume.description && (
-          <section className="py-16 border-b border-gray-200">
-            <div className="max-w-6xl mx-auto px-6">
-              <h2 className="font-serif text-3xl text-black mb-8">Full Description</h2>
-              <p className="text-gray-700 leading-relaxed line-clamp-none max-w-3xl">
+          <section className="py-16">
+            <div className="max-w-3xl mx-auto px-6">
+              <h2 className="font-serif text-3xl text-black mb-6">Full Description</h2>
+              <p className="text-gray-600 leading-relaxed">
                 {perfume.description}
               </p>
             </div>
@@ -211,27 +223,32 @@ export default function PerfumePage({ perfume, suggestions }) {
 
         {/* Related Fragrances */}
         {suggestions && suggestions.length > 0 && (
-          <section className="py-16 bg-gray-50">
+          <section className="py-20 bg-light-bg">
             <div className="max-w-6xl mx-auto px-6">
-              <h2 className="font-serif text-3xl text-black mb-8">Related Fragrances</h2>
-              <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center space-y-3 mb-12">
+                <p className="divider-accent text-accent text-xs font-serif tracking-[0.3em] uppercase">More to Explore</p>
+                <h2 className="font-serif text-3xl text-black">Related Fragrances</h2>
+              </div>
+              <div className="grid md:grid-cols-3 gap-6">
                 {suggestions.slice(0, 3).map((frag, idx) => (
-                  <Link key={frag.id || idx} href={`/perfume/${frag.id}`} className="group block border border-gray-200 hover:border-accent transition-colors bg-white">
-                    <div className="bg-gray-100 aspect-square flex items-center justify-center overflow-hidden">
+                  <Link key={frag.id || idx} href={`/perfume/${frag.id}`} className="group block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 card-hover">
+                    <div className="bg-gray-50 aspect-square flex items-center justify-center overflow-hidden">
                       {frag.image_url ? (
                         <img
                           src={frag.image_url}
                           alt={frag.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           loading="lazy"
                         />
                       ) : (
-                        <p className="text-gray-400 text-2xl">✦</p>
+                        <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                          <span className="text-accent">✦</span>
+                        </div>
                       )}
                     </div>
-                    <div className="p-4">
-                      <p className="text-accent text-xs font-serif uppercase mb-2">{frag.brand}</p>
-                      <p className="font-serif text-sm text-black group-hover:text-accent transition-colors line-clamp-2">
+                    <div className="p-5">
+                      <p className="text-accent text-[10px] font-serif uppercase tracking-[0.2em] mb-1.5">{frag.brand}</p>
+                      <p className="font-serif text-sm text-gray-900 group-hover:text-accent transition-colors line-clamp-2">
                         {frag.name}
                       </p>
                     </div>

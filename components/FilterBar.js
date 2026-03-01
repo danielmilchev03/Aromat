@@ -20,12 +20,6 @@ const SORT_OPTIONS = [
 
 /**
  * Reusable filter bar for perfume lists.
- *
- * Props:
- *  - brands: string[]           – list of unique brands
- *  - filters: object            – current filter state { gender, brand, sort }
- *  - onChange: (filters) => void – called whenever any filter changes
- *  - showSort: boolean          – whether to show sort dropdown (default true)
  */
 export default function FilterBar({ brands = [], filters, onChange, showSort = true }) {
   const [expanded, setExpanded] = useState(false);
@@ -39,37 +33,37 @@ export default function FilterBar({ brands = [], filters, onChange, showSort = t
   const activeCount = [gender !== 'all', brand !== 'all', sort !== 'default'].filter(Boolean).length;
 
   return (
-    <section className="border-b border-gray-200">
-      <div className="max-w-6xl mx-auto px-6 py-6">
+    <section className="border-b border-gray-100 bg-white">
+      <div className="max-w-6xl mx-auto px-6 py-5">
         {/* Toggle button for mobile */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="md:hidden flex items-center gap-2 text-sm font-serif text-gray-700 mb-4"
+          className="md:hidden flex items-center gap-2.5 text-sm text-gray-700 mb-4"
         >
-          <svg className={`w-4 h-4 transition-transform ${expanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className={`w-4 h-4 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
-          Filters
+          <span className="font-medium">Filters</span>
           {activeCount > 0 && (
-            <span className="bg-accent text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+            <span className="bg-accent text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
               {activeCount}
             </span>
           )}
         </button>
 
-        <div className={`${expanded ? 'block' : 'hidden'} md:block space-y-6`}>
+        <div className={`${expanded ? 'block' : 'hidden'} md:flex md:items-end md:gap-6 space-y-5 md:space-y-0`}>
           {/* Gender Filter */}
           <div>
-            <h3 className="font-serif text-sm text-gray-700 uppercase tracking-widest mb-3">Gender</h3>
-            <div className="flex gap-3 flex-wrap">
+            <h3 className="text-[10px] text-gray-400 uppercase tracking-[0.15em] font-medium mb-2.5">Gender</h3>
+            <div className="flex gap-2 flex-wrap">
               {GENDER_OPTIONS.map((opt) => (
                 <button
                   key={opt.id}
                   onClick={() => update('gender', opt.id)}
-                  className={`px-5 py-2 text-sm font-serif transition-colors ${
+                  className={`px-4 py-1.5 text-sm rounded-full transition-all duration-200 ${
                     gender === opt.id
-                      ? 'bg-accent text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-accent text-white shadow-sm'
+                      : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-100'
                   }`}
                 >
                   {opt.label}
@@ -81,11 +75,11 @@ export default function FilterBar({ brands = [], filters, onChange, showSort = t
           {/* Brand Filter */}
           {brands.length > 0 && (
             <div>
-              <h3 className="font-serif text-sm text-gray-700 uppercase tracking-widest mb-3">Brand</h3>
+              <h3 className="text-[10px] text-gray-400 uppercase tracking-[0.15em] font-medium mb-2.5">Brand</h3>
               <select
                 value={brand}
                 onChange={(e) => update('brand', e.target.value)}
-                className="w-full max-w-xs px-4 py-2 border border-gray-300 text-sm font-serif text-gray-700 bg-white focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors"
+                className="px-4 py-2 border border-gray-200 text-sm text-gray-700 bg-white rounded-xl focus:border-accent focus:ring-2 focus:ring-accent/15 outline-none transition-all min-w-[180px]"
               >
                 <option value="all">All Brands</option>
                 {brands.map((b) => (
@@ -98,11 +92,11 @@ export default function FilterBar({ brands = [], filters, onChange, showSort = t
           {/* Sort */}
           {showSort && (
             <div>
-              <h3 className="font-serif text-sm text-gray-700 uppercase tracking-widest mb-3">Sort By</h3>
+              <h3 className="text-[10px] text-gray-400 uppercase tracking-[0.15em] font-medium mb-2.5">Sort By</h3>
               <select
                 value={sort}
                 onChange={(e) => update('sort', e.target.value)}
-                className="w-full max-w-xs px-4 py-2 border border-gray-300 text-sm font-serif text-gray-700 bg-white focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors"
+                className="px-4 py-2 border border-gray-200 text-sm text-gray-700 bg-white rounded-xl focus:border-accent focus:ring-2 focus:ring-accent/15 outline-none transition-all min-w-[160px]"
               >
                 {SORT_OPTIONS.map((opt) => (
                   <option key={opt.id} value={opt.id}>{opt.label}</option>
@@ -115,9 +109,12 @@ export default function FilterBar({ brands = [], filters, onChange, showSort = t
           {activeCount > 0 && (
             <button
               onClick={() => onChange({ gender: 'all', brand: 'all', sort: 'default' })}
-              className="text-sm text-accent hover:underline font-serif"
+              className="text-sm text-accent hover:text-accent-600 transition-colors flex items-center gap-1.5"
             >
-              Clear all filters
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              Clear
             </button>
           )}
         </div>

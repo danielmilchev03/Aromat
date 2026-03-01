@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 export default function Contact() {
@@ -25,29 +26,14 @@ export default function Contact() {
       </Head>
 
       <main className="min-h-screen bg-white">
-        {/* Navigation */}
-        <nav className="border-b border-gray-200">
-          <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link href="/" className="font-serif text-2xl text-black hover:text-accent transition-colors">
-              Aromat
-            </Link>
-            <div className="flex items-center gap-6 text-sm">
-              <Link href="/gallery" className="text-gray-600 hover:text-black transition-colors">Gallery</Link>
-              <Link href="/search" className="text-gray-600 hover:text-black transition-colors">Search</Link>
-            </div>
-          </div>
-        </nav>
+        <Navbar />
 
         {/* Header */}
-        <section className="bg-gradient-to-b from-white to-gray-50 py-16 border-b border-gray-200">
-          <div className="max-w-4xl mx-auto px-6 text-center space-y-6">
-            <div className="flex items-center justify-center gap-4">
-              <div className="h-px w-12 bg-accent"></div>
-              <p className="text-accent text-sm font-serif tracking-widest">GET IN TOUCH</p>
-              <div className="h-px w-12 bg-accent"></div>
-            </div>
+        <section className="pt-28 pb-16 bg-pattern">
+          <div className="max-w-4xl mx-auto px-6 text-center space-y-5">
+            <p className="divider-accent text-accent text-xs font-serif tracking-[0.3em] uppercase">Get In Touch</p>
             <h1 className="font-serif text-5xl md:text-6xl text-black">Contact Us</h1>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-500 text-lg max-w-xl mx-auto leading-relaxed">
               Have a question, suggestion, or partnership inquiry? We'd love to hear from you.
             </p>
           </div>
@@ -61,23 +47,23 @@ export default function Contact() {
               <div className="md:col-span-2 space-y-8">
                 <div className="space-y-4">
                   <h3 className="font-serif text-xl text-black">Reach Out</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p className="text-gray-500 text-sm leading-relaxed">
                     Whether you want to report an issue, suggest a feature, or simply say hello —
                     we value every message.
                   </p>
                 </div>
 
                 <div className="space-y-6 text-sm">
-                  <div className="space-y-1">
-                    <p className="font-serif text-accent tracking-wider text-xs uppercase">Email</p>
+                  <div className="bg-light-bg rounded-xl p-4 space-y-1">
+                    <p className="font-serif text-accent tracking-wider text-[10px] uppercase">Email</p>
                     <p className="text-gray-700">contact@aromat.app</p>
                   </div>
-                  <div className="space-y-1">
-                    <p className="font-serif text-accent tracking-wider text-xs uppercase">Location</p>
+                  <div className="bg-light-bg rounded-xl p-4 space-y-1">
+                    <p className="font-serif text-accent tracking-wider text-[10px] uppercase">Location</p>
                     <p className="text-gray-700">The Internet, Worldwide</p>
                   </div>
-                  <div className="space-y-1">
-                    <p className="font-serif text-accent tracking-wider text-xs uppercase">Response Time</p>
+                  <div className="bg-light-bg rounded-xl p-4 space-y-1">
+                    <p className="font-serif text-accent tracking-wider text-[10px] uppercase">Response Time</p>
                     <p className="text-gray-700">Within 48 hours</p>
                   </div>
                 </div>
@@ -86,53 +72,53 @@ export default function Contact() {
               {/* Form Column */}
               <div className="md:col-span-3">
                 {submitted ? (
-                  <div className="text-center py-16 space-y-6 border border-gray-200 bg-gray-50">
-                    <div className="text-5xl text-accent">✓</div>
+                  <div className="text-center py-16 space-y-6 rounded-2xl border border-gray-100 bg-light-bg">
+                    <div className="w-16 h-16 mx-auto rounded-full bg-accent/10 flex items-center justify-center text-accent text-2xl">✓</div>
                     <h3 className="font-serif text-2xl text-black">Message Sent</h3>
-                    <p className="text-gray-600">Thank you for reaching out. We'll get back to you soon.</p>
+                    <p className="text-gray-500">Thank you for reaching out. We'll get back to you soon.</p>
                     <button
                       onClick={() => { setSubmitted(false); setFormData({ name: '', email: '', subject: '', message: '' }); }}
-                      className="px-6 py-2 border border-gray-300 text-gray-700 font-serif text-sm hover:border-accent hover:text-accent transition-colors"
+                      className="btn-secondary text-sm"
                     >
                       Send Another Message
                     </button>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid sm:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="block text-sm font-serif text-gray-700 tracking-wider uppercase text-xs">Name</label>
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid sm:grid-cols-2 gap-5">
+                      <div className="space-y-1.5">
+                        <label className="block font-serif text-[10px] text-gray-500 tracking-[0.15em] uppercase">Name</label>
                         <input
                           type="text"
                           name="name"
                           value={formData.name}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 border border-gray-300 bg-white text-black focus:border-accent focus:outline-none transition-colors"
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-black focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none transition-all"
                           placeholder="Your name"
                         />
                       </div>
-                      <div className="space-y-2">
-                        <label className="block text-sm font-serif text-gray-700 tracking-wider uppercase text-xs">Email</label>
+                      <div className="space-y-1.5">
+                        <label className="block font-serif text-[10px] text-gray-500 tracking-[0.15em] uppercase">Email</label>
                         <input
                           type="email"
                           name="email"
                           value={formData.email}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 border border-gray-300 bg-white text-black focus:border-accent focus:outline-none transition-colors"
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-black focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none transition-all"
                           placeholder="your@email.com"
                         />
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-serif text-gray-700 tracking-wider uppercase text-xs">Subject</label>
+                    <div className="space-y-1.5">
+                      <label className="block font-serif text-[10px] text-gray-500 tracking-[0.15em] uppercase">Subject</label>
                       <select
                         name="subject"
                         value={formData.subject}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 bg-white text-black focus:border-accent focus:outline-none transition-colors"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-black focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none transition-all"
                       >
                         <option value="">Select a topic</option>
                         <option value="general">General Inquiry</option>
@@ -142,21 +128,21 @@ export default function Contact() {
                         <option value="data">Data Correction</option>
                       </select>
                     </div>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-serif text-gray-700 tracking-wider uppercase text-xs">Message</label>
+                    <div className="space-y-1.5">
+                      <label className="block font-serif text-[10px] text-gray-500 tracking-[0.15em] uppercase">Message</label>
                       <textarea
                         name="message"
                         value={formData.message}
                         onChange={handleChange}
                         required
                         rows={6}
-                        className="w-full px-4 py-3 border border-gray-300 bg-white text-black focus:border-accent focus:outline-none transition-colors resize-none"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-black focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none transition-all resize-none"
                         placeholder="Tell us what's on your mind..."
                       />
                     </div>
                     <button
                       type="submit"
-                      className="px-10 py-3 bg-accent text-white font-serif hover:bg-yellow-600 transition-colors"
+                      className="btn-primary"
                     >
                       Send Message
                     </button>
@@ -168,17 +154,13 @@ export default function Contact() {
         </section>
 
         {/* CTA */}
-        <section className="bg-gray-50 border-t border-gray-200 py-16">
+        <section className="bg-light-bg py-16">
           <div className="max-w-4xl mx-auto px-6 text-center space-y-8">
             <h2 className="font-serif text-3xl text-black">Explore Fragrances</h2>
-            <p className="text-gray-600 text-lg">While you wait for our reply, discover something beautiful.</p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/gallery" className="px-8 py-3 border-2 border-accent text-accent font-serif hover:bg-accent hover:text-white transition-colors">
-                Browse Gallery
-              </Link>
-              <Link href="/collections/top-rated" className="px-8 py-3 border-2 border-accent text-accent font-serif hover:bg-accent hover:text-white transition-colors">
-                Top Rated
-              </Link>
+            <p className="text-gray-500 text-base">While you wait for our reply, discover something beautiful.</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link href="/gallery" className="btn-secondary">Browse Gallery</Link>
+              <Link href="/collections/top-rated" className="btn-primary">Top Rated</Link>
             </div>
           </div>
         </section>
