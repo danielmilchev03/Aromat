@@ -1,9 +1,16 @@
-import { getPerfumes, getTopRatedPerfumes, getRandomPerfumes } from '../../lib/api';
+import { getPerfumes, getPerfumeById, getTopRatedPerfumes, getRandomPerfumes } from '../../lib/api';
 
 export default async function handler(req, res) {
-  const { type = 'featured', limit = 12, offset = 0 } = req.query;
+  const { type = 'featured', limit = 12, offset = 0, id } = req.query;
 
   try {
+    // Single perfume lookup by id
+    if (id) {
+      const perfume = await getPerfumeById(id);
+      if (!perfume) return res.status(404).json({ error: 'Not found' });
+      return res.status(200).json(perfume);
+    }
+
     let results;
     
     switch (type) {

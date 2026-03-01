@@ -5,6 +5,7 @@ import { getPerfumeById, searchPerfumes } from '../../lib/api';
 import ScentPyramid from '../../components/ScentPyramid';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import CollectionButtons from '../../components/CollectionButtons';
 
 export default function PerfumePage({ perfume, suggestions }) {
   const [copied, setCopied] = useState(false);
@@ -166,6 +167,9 @@ export default function PerfumePage({ perfume, suggestions }) {
                     </p>
                   </div>
                 )}
+
+                {/* Collection Buttons */}
+                <CollectionButtons perfumeId={perfume.id} />
 
                 {/* Actions */}
                 <div className="flex gap-3 pt-2">
