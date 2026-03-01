@@ -1,11 +1,11 @@
-import { getUniqueBrands } from '../../lib/perfumeData';
+import { getUniqueBrands } from '../../lib/api';
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   try {
-    const brands = getUniqueBrands();
+    const brands = await getUniqueBrands();
     res.status(200).json({ brands });
   } catch (error) {
     console.error('Error fetching brands:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Failed to fetch brands from PerfumAPI' });
   }
 }

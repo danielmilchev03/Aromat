@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { getRandomPerfumes, getTopRatedPerfumes, getUniqueBrands } from '../lib/perfumeData';
+import { getRandomPerfumes, getTopRatedPerfumes, getUniqueBrands } from '../lib/api';
 import PerfumeCard from '../components/PerfumeCard';
 import Footer from '../components/Footer';
 
@@ -92,7 +92,7 @@ export default function Gallery({ featured = [], topRated = [], brands = [] }) {
                   >
                     All
                   </button>
-                  {brands.slice(0, 8).map((brand) => (
+                  {brands.map((brand) => (
                     <button
                       key={brand}
                       onClick={() => setFilterBrand(brand)}
@@ -151,11 +151,11 @@ export default function Gallery({ featured = [], topRated = [], brands = [] }) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   try {
-    const featured = getRandomPerfumes(12);
-    const topRated = getTopRatedPerfumes(12);
-    const brands = getUniqueBrands().slice(0, 12);
+    const featured = await getRandomPerfumes(12);
+    const topRated = await getTopRatedPerfumes(12);
+    const brands = await getUniqueBrands();
 
     return {
       props: {
@@ -163,17 +163,15 @@ export async function getStaticProps() {
         topRated,
         brands,
       },
-      revalidate: 3600, // Revalidate every hour
     };
   } catch (error) {
-    console.error('Error in getStaticProps:', error);
+    console.error('Error in getServerSideProps:', error);
     return {
       props: {
         featured: [],
         topRated: [],
         brands: [],
       },
-      revalidate: 3600,
     };
   }
 }

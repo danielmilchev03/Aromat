@@ -3,7 +3,7 @@ import Link from 'next/link';
 import SearchBar from '../components/SearchBar';
 import PerfumeCard from '../components/PerfumeCard';
 import Footer from '../components/Footer';
-import { getRandomPerfumes } from '../lib/perfumeData';
+import { getRandomPerfumes } from '../lib/api';
 
 export default function Home({ randomPerfumes = [] }) {
   return (
@@ -119,7 +119,7 @@ export default function Home({ randomPerfumes = [] }) {
             {randomPerfumes.length > 0 ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {randomPerfumes.map((perfume, index) => (
-                  <div key={`${perfume.title}-${index}`}>
+                  <div key={perfume.id || index}>
                     <PerfumeCard perfume={perfume} featured={true} />
                   </div>
                 ))}
@@ -169,15 +169,14 @@ export default function Home({ randomPerfumes = [] }) {
  * Generate random perfumes at build time for static generation
  * Revalidates every 1 hour (3600 seconds) for fresh recommendations
  */
-export async function getStaticProps() {
+export async function getServerSideProps() {
   try {
-    const randomPerfumes = getRandomPerfumes(6);
+    const randomPerfumes = await getRandomPerfumes(6);
     
     return {
       props: {
         randomPerfumes: randomPerfumes || [],
       },
-      revalidate: 3600, // Revalidate every hour for fresh recommendations
     };
   } catch (error) {
     console.error('Error fetching random perfumes:', error);
@@ -185,7 +184,6 @@ export async function getStaticProps() {
       props: {
         randomPerfumes: [],
       },
-      revalidate: 60, // Retry after 1 minute if there's an error
     };
   }
 }

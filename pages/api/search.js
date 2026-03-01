@@ -1,6 +1,6 @@
-import { searchPerfumes } from '../../lib/perfumeData';
+import { searchPerfumes } from '../../lib/api';
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   const { q, limit = 5 } = req.query;
 
   if (!q) {
@@ -8,11 +8,10 @@ export default function handler(req, res) {
   }
 
   try {
-    const results = searchPerfumes(q);
-    const limitedResults = results.slice(0, parseInt(limit));
-    res.status(200).json(limitedResults);
+    const results = await searchPerfumes(q, parseInt(limit));
+    res.status(200).json(results);
   } catch (error) {
     console.error('Search error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Failed to search PerfumAPI' });
   }
 }

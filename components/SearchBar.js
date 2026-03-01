@@ -36,8 +36,8 @@ export default function SearchBar() {
     }
   };
 
-  const handleSuggestionClick = (title) => {
-    router.push(`/perfume/${encodeURIComponent(title)}`);
+  const handleSuggestionClick = (perfume) => {
+    router.push(`/perfume/${perfume.id}`);
     setShowSuggestions(false);
   };
 
@@ -63,12 +63,12 @@ export default function SearchBar() {
         <div className="absolute top-full left-0 right-0 bg-white border-2 border-gray-300 border-t-0 shadow-lg z-50">
           {suggestions.map((perfume, idx) => (
             <button
-              key={idx}
-              onClick={() => handleSuggestionClick(perfume.title)}
+              key={perfume.id || idx}
+              onClick={() => handleSuggestionClick(perfume)}
               className="w-full text-left px-6 py-3 hover:bg-gray-50 border-b border-gray-200 last:border-b-0 transition-colors"
             >
-              <div className="font-serif font-semibold text-gray-900">{perfume.title}</div>
-              <div className="text-sm text-gray-600">{perfume.designer}</div>
+              <div className="font-serif font-semibold text-gray-900">{perfume.name}</div>
+              <div className="text-sm text-gray-600">{perfume.brand}</div>
             </button>
           ))}
         </div>

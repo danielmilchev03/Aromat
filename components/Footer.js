@@ -19,7 +19,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-gray-400">
               <li><Link href="/" className="hover:text-accent transition-colors">Home</Link></li>
               <li><Link href="/gallery" className="hover:text-accent transition-colors">Gallery</Link></li>
-              <li><Link href="/" className="hover:text-accent transition-colors">Search</Link></li>
+              <li><Link href="/search" className="hover:text-accent transition-colors">Search</Link></li>
             </ul>
           </div>
 
@@ -27,9 +27,9 @@ export default function Footer() {
           <div>
             <h4 className="font-serif text-sm uppercase tracking-widest mb-4">Collections</h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-accent transition-colors">Top Rated</a></li>
-              <li><a href="#" className="hover:text-accent transition-colors">Most Popular</a></li>
-              <li><a href="#" className="hover:text-accent transition-colors">New Arrivals</a></li>
+              <li><Link href="/collections/top-rated" className="hover:text-accent transition-colors">Top Rated</Link></li>
+              <li><Link href="/collections/most-popular" className="hover:text-accent transition-colors">Most Popular</Link></li>
+              <li><Link href="/collections/new-arrivals" className="hover:text-accent transition-colors">New Arrivals</Link></li>
             </ul>
           </div>
 
@@ -37,9 +37,9 @@ export default function Footer() {
           <div>
             <h4 className="font-serif text-sm uppercase tracking-widest mb-4">About</h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-accent transition-colors">About Aromat</a></li>
-              <li><a href="#" className="hover:text-accent transition-colors">Contact</a></li>
-              <li><a href="#" className="hover:text-accent transition-colors">Privacy</a></li>
+              <li><Link href="/about" className="hover:text-accent transition-colors">About Aromat</Link></li>
+              <li><Link href="/contact" className="hover:text-accent transition-colors">Contact</Link></li>
+              <li><Link href="/privacy" className="hover:text-accent transition-colors">Privacy</Link></li>
             </ul>
           </div>
         </div>

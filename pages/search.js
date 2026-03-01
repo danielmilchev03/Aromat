@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { searchPerfumes } from '../lib/perfumeData';
+import { searchPerfumes } from '../lib/api';
 import PerfumeCard from '../components/PerfumeCard';
 import Footer from '../components/Footer';
 
@@ -12,17 +12,22 @@ export default function SearchResults({ initialResults = [], query = '' }) {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(query);
 
+  // Track the last fetched query to avoid redundant fetches
+  const [lastFetchedQuery, setLastFetchedQuery] = useState(query);
+
   useEffect(() => {
-    if (router.query.q !== searchQuery) {
-      setSearchQuery(router.query.q || '');
-      handleSearch(router.query.q || '');
+    const q = router.query.q || '';
+    if (q && q !== lastFetchedQuery) {
+      setSearchQuery(q);
+      setLastFetchedQuery(q);
+      handleSearch(q);
     }
   }, [router.query.q]);
 
-  const handleSearch = (q) => {
+  const handleSearch = async (q) => {
     setLoading(true);
     try {
-      const res = searchPerfumes(q);
+      const res = await searchPerfumes(q, 50);
       setResults(res);
     } catch (error) {
       console.error('Search error:', error);
@@ -172,11 +177,11 @@ export async function getServerSideProps({ query }) {
       };
     }
 
-    const results = searchPerfumes(q);
+    const results = await searchPerfumes(q, 50);
 
     return {
       props: {
-        initialResults: results.slice(0, 50), // Limit initial results
+        initialResults: results || [],
         query: q,
       },
     };
@@ -185,7 +190,7 @@ export async function getServerSideProps({ query }) {
     return {
       props: {
         initialResults: [],
-        query: '',
+        query: query.q || '',
       },
     };
   }
