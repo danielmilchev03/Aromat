@@ -1,10 +1,15 @@
+import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { getMostPopularPerfumes } from '../../lib/api';
 import PerfumeCard from '../../components/PerfumeCard';
+import FilterBar, { applyFilters, extractBrands } from '../../components/FilterBar';
 import Footer from '../../components/Footer';
 
 export default function MostPopular({ perfumes = [] }) {
+  const [filters, setFilters] = useState({ gender: 'all', brand: 'all', sort: 'default' });
+  const brands = extractBrands(perfumes);
+  const filtered = applyFilters(perfumes, filters);
   return (
     <>
       <Head>
@@ -42,14 +47,21 @@ export default function MostPopular({ perfumes = [] }) {
           </div>
         </section>
 
+        {/* Filters */}
+        <FilterBar
+          brands={brands}
+          filters={filters}
+          onChange={setFilters}
+        />
+
         {/* Grid */}
         <section className="py-16">
           <div className="max-w-6xl mx-auto px-6">
-            {perfumes.length > 0 ? (
+            {filtered.length > 0 ? (
               <>
-                <p className="text-gray-500 text-sm mb-8 text-center">{perfumes.length} fragrances ranked by popularity</p>
+                <p className="text-gray-500 text-sm mb-8 text-center">{filtered.length} fragrances ranked by popularity</p>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {perfumes.map((perfume, idx) => (
+                  {filtered.map((perfume, idx) => (
                     <div key={perfume.id || idx} className="relative">
                       {idx < 3 && (
                         <div className="absolute -top-3 -left-3 z-10 w-8 h-8 bg-accent text-white text-sm font-serif flex items-center justify-center rounded-full shadow-md">

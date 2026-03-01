@@ -90,7 +90,7 @@ export default function Home({ randomPerfumes = [] }) {
               </div>
 
               {/* Feature 3 */}
-              <Link href="/search-notes" className="text-center space-y-4 group">
+              <Link href="/search?note=" className="text-center space-y-4 group">
                 <div className="text-5xl text-accent mb-4">⟡</div>
                 <h3 className="font-serif text-xl text-black group-hover:text-accent transition-colors">Search by Notes</h3>
                 <p className="text-gray-600">
@@ -150,9 +150,6 @@ export default function Home({ randomPerfumes = [] }) {
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Link href="/search" className="px-8 py-3 bg-accent text-white font-serif hover:bg-yellow-600 transition-colors inline-block">
                 Advanced Search
-              </Link>
-              <Link href="/search-notes" className="px-8 py-3 bg-black text-white font-serif hover:bg-gray-800 transition-colors inline-block">
-                Search by Notes
               </Link>
               <Link href="/gallery" className="px-8 py-3 border-2 border-accent text-accent font-serif hover:bg-accent hover:text-white transition-colors inline-block">
                 View Gallery

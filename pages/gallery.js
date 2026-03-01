@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { getRandomPerfumes, getTopRatedPerfumes, getUniqueBrands } from '../lib/api';
 import PerfumeCard from '../components/PerfumeCard';
+import FilterBar, { applyFilters, extractBrands } from '../components/FilterBar';
 import Footer from '../components/Footer';
 
 const API_BASE = process.env.NEXT_PUBLIC_PERFUMAPI_URL || 'https://perfumapidatabase.onrender.com';
 
 export default function Gallery({ featured = [], topRated = [], brands = [] }) {
-  const [filterBrand, setFilterBrand] = useState('all');
+  const [filters, setFilters] = useState({ gender: 'all', brand: 'all', sort: 'default' });
   const [displayMode, setDisplayMode] = useState('featured'); // featured, toprated, all
   const [allPerfumes, setAllPerfumes] = useState([]);
   const [showAll, setShowAll] = useState(false);
@@ -47,9 +48,10 @@ export default function Gallery({ featured = [], topRated = [], brands = [] }) {
   };
 
   const perfumesBeforeFilter = getDisplayPerfumes();
-  const displayPerfumes = filterBrand === 'all'
-    ? perfumesBeforeFilter
-    : perfumesBeforeFilter.filter(p => p.brand === filterBrand);
+  const allBrands = extractBrands(perfumesBeforeFilter).length > 0
+    ? extractBrands(perfumesBeforeFilter)
+    : brands;
+  const displayPerfumes = applyFilters(perfumesBeforeFilter, filters);
 
   return (
     <>
@@ -81,66 +83,38 @@ export default function Gallery({ featured = [], topRated = [], brands = [] }) {
           </div>
         </section>
 
-        {/* Filters */}
+        {/* View Mode Tabs */}
         <section className="border-b border-gray-200">
-          <div className="max-w-6xl mx-auto px-6 py-8">
-            {/* View Mode */}
-            <div className="mb-8">
-              <h3 className="font-serif text-sm text-gray-700 uppercase tracking-widest mb-4">View</h3>
-              <div className="flex gap-4 flex-wrap">
-                {[
-                  { id: 'featured', label: 'Featured' },
-                  { id: 'toprated', label: 'Top Rated' },
-                  ...(showAll ? [{ id: 'all', label: 'All Perfumes' }] : []),
-                ].map((mode) => (
-                  <button
-                    key={mode.id}
-                    onClick={() => setDisplayMode(mode.id)}
-                    className={`px-6 py-2 border font-serif text-sm transition-colors ${
-                      displayMode === mode.id
-                        ? 'bg-accent text-white border-accent'
-                        : 'border-gray-300 text-gray-700 hover:border-accent'
-                    }`}
-                  >
-                    {mode.label}
-                  </button>
-                ))}
-              </div>
+          <div className="max-w-6xl mx-auto px-6 py-6">
+            <h3 className="font-serif text-sm text-gray-700 uppercase tracking-widest mb-4">View</h3>
+            <div className="flex gap-4 flex-wrap">
+              {[
+                { id: 'featured', label: 'Featured' },
+                { id: 'toprated', label: 'Top Rated' },
+                ...(showAll ? [{ id: 'all', label: 'All Perfumes' }] : []),
+              ].map((mode) => (
+                <button
+                  key={mode.id}
+                  onClick={() => setDisplayMode(mode.id)}
+                  className={`px-6 py-2 border font-serif text-sm transition-colors ${
+                    displayMode === mode.id
+                      ? 'bg-accent text-white border-accent'
+                      : 'border-gray-300 text-gray-700 hover:border-accent'
+                  }`}
+                >
+                  {mode.label}
+                </button>
+              ))}
             </div>
-
-            {/* Brand Filter */}
-            {brands.length > 0 && (
-              <div>
-                <h3 className="font-serif text-sm text-gray-700 uppercase tracking-widest mb-4">Brands</h3>
-                <div className="flex gap-3 flex-wrap">
-                  <button
-                    onClick={() => setFilterBrand('all')}
-                    className={`px-4 py-2 text-sm font-serif transition-colors ${
-                      filterBrand === 'all'
-                        ? 'bg-accent text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    All
-                  </button>
-                  {brands.map((brand) => (
-                    <button
-                      key={brand}
-                      onClick={() => setFilterBrand(brand)}
-                      className={`px-4 py-2 text-sm font-serif transition-colors ${
-                        filterBrand === brand
-                          ? 'bg-accent text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      {brand}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </section>
+
+        {/* Filters */}
+        <FilterBar
+          brands={allBrands}
+          filters={filters}
+          onChange={setFilters}
+        />
 
         {/* Gallery Grid */}
         <section className="py-16">
