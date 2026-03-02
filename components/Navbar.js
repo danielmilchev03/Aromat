@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
+import ThemeToggle from './ThemeToggle';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -10,6 +12,7 @@ export default function Navbar() {
   const profileRef = useRef(null);
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -79,6 +82,9 @@ export default function Navbar() {
               />
             </Link>
           ))}
+
+          {/* Theme toggle */}
+          <ThemeToggle />
 
           {/* Auth section */}
           {status === 'loading' ? (
@@ -179,6 +185,30 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          {/* Mobile theme selector */}
+          <div className="px-4 py-3">
+            <span className="text-[10px] text-gray-400 uppercase tracking-[0.15em] mb-2.5 block">Theme</span>
+            <div className="flex gap-2">
+              {[
+                { key: 'ivory', label: 'Ivory' },
+                { key: 'noir', label: 'Noir' },
+                { key: 'midnight', label: 'Midnight' },
+              ].map((t) => (
+                <button
+                  key={t.key}
+                  onClick={() => setTheme(t.key)}
+                  className={`flex-1 py-2 text-xs rounded-lg transition-colors duration-200 ${
+                    theme === t.key
+                      ? 'bg-accent/10 text-accent font-medium'
+                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Mobile auth */}
           <div className="border-t border-gray-200/50 mt-2 pt-2">

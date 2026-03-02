@@ -1,43 +1,100 @@
-# Aromat - Modern Fragrance Encyclopedia
+# Aromat — Modern Fragrance Encyclopedia
 
-A sleek, minimalist fragrance encyclopedia built with Next.js and Tailwind CSS. Designed to be a more elegant alternative to Fragrantica with a focus on clean design and excellent user experience.
+A sleek, high-end fragrance encyclopedia built with Next.js, Tailwind CSS, and PostgreSQL. Designed as an elegant alternative to Fragrantica with a focus on clean design, personal collections, and an excellent user experience.
 
 ## Tech Stack
 
-- **Framework**: Next.js (JavaScript, Pages Router)
-- **Styling**: Tailwind CSS
-- **Database**: Local JSON file (perfumes.json) - structured for easy migration to MongoDB/PostgreSQL
-- **Design Philosophy**: Monochrome palette (Black/White/Gray) with Gold accent color, Serif typography
+| Layer | Technology |
+|-------|-----------|
+| **Framework** | Next.js 14 (JavaScript, Pages Router) |
+| **Styling** | Tailwind CSS 3 + Google Fonts (EB Garamond / Inter) |
+| **Database** | PostgreSQL via Prisma 7 (`@prisma/adapter-pg`) |
+| **Auth** | NextAuth.js 4 (Google OAuth) with Prisma Adapter |
+| **Perfume Data** | [PerfumAPI](https://perfumapidatabase.onrender.com) (external REST API) |
+| **Design** | 3-theme system (Ivory / Noir / Midnight), serif typography, luxury aesthetic |
 
 ## Project Structure
 
 ```
 aromat/
 ├── pages/
-│   ├── api/
-│   │   └── search.js                # Search API endpoint
-│   ├── _app.js                      # Next.js app wrapper
-│   └── index.js                     # Homepage
+│   ├── _app.js                      # Root component + providers
+│   ├── _document.js                 # Custom HTML document
+│   ├── index.js                     # Homepage with hero & search
+│   ├── gallery.js                   # Browse fragrances
+│   ├── search.js                    # Search results
+│   ├── about.js                     # About Aromat
+│   ├── contact.js                   # Contact form
+│   ├── privacy.js                   # Privacy policy
+│   ├── profile.js                   # User profile & collection
+│   ├── auth/
+│   │   ├── signin.js               # Custom sign-in page
+│   │   └── error.js                # Auth error page
+│   ├── collections/
+│   │   ├── most-popular.js         # Most popular fragrances
+│   │   ├── new-arrivals.js         # New arrivals
+│   │   └── top-rated.js            # Top rated fragrances
+│   ├── perfume/
+│   │   └── [id].js                 # Individual perfume page
+│   └── api/
+│       ├── search.js               # Search API
+│       ├── brands.js               # Brands API
+│       ├── fragrances.js           # Fragrances API
+│       ├── collection.js           # Collection CRUD API
+│       └── auth/
+│           └── [...nextauth].js    # NextAuth config
 ├── components/
-│   └── SearchBar.js                 # Search component
+│   ├── Navbar.js                   # Sticky nav with mobile menu
+│   ├── Footer.js                   # Site footer
+│   ├── PerfumeCard.js              # Fragrance card component
+│   ├── ScentPyramid.js             # Top/Heart/Base notes viz
+│   ├── SearchBar.js                # Search with auto-suggestions
+│   ├── CollectionButtons.js        # Have It / Want It / Had It
+│   ├── FilterBar.js                # Gender, brand & sort filters
+│   └── ThemeToggle.js              # 3-theme switcher
+├── contexts/
+│   └── ThemeContext.js             # Theme state + localStorage
 ├── lib/
-│   └── perfumeData.js               # Data provider utility
+│   ├── api.js                      # PerfumAPI client functions
+│   ├── perfumeData.js              # Data utilities & text cleaning
+│   └── prisma.js                   # Prisma client singleton
+├── prisma/
+│   ├── schema.prisma               # Database schema
+│   ├── prisma.config.ts            # Prisma config
+│   └── migrations/                 # Database migrations
 ├── styles/
-│   └── globals.css                  # Global styles & Tailwind
-├── perfumes.json                    # Fragrance database
+│   └── globals.css                 # Global styles & Tailwind
 ├── package.json
 ├── next.config.js
 ├── tailwind.config.js
-├── postcss.config.js
-└── .eslintrc.json
+└── postcss.config.js
 ```
 
 ## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- PostgreSQL database (local or hosted)
+- Google OAuth credentials (for authentication)
+
+### Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+DATABASE_URL="postgresql://user:password@host:5432/aromat?sslmode=require"
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-here"
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+```
 
 ### Installation
 
 ```bash
 npm install
+npx prisma migrate deploy
 ```
 
 ### Development
@@ -46,7 +103,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
 ### Production
 
@@ -55,49 +112,82 @@ npm run build
 npm start
 ```
 
+The build script automatically runs `prisma generate` and `prisma migrate deploy` before `next build`.
+
 ## Features
 
-### Data Handler (`lib/perfumeData.js`)
+### Fragrance Browsing
+- **Gallery** — responsive grid with brand & rating display
+- **Search** — by name, brand, or fragrance notes with real-time suggestions
+- **Perfume Detail** — full info, scent pyramid visualization, related fragrances
 
-- `getAllPerfumes(limit)` - Get all perfumes or limited set
-- `searchPerfumes(query)` - Search by name, brand, or notes
-- `getPerfumeByTitle(title)` - Get single perfume
-- `getPerfumesByDesigner(designer)` - Filter by brand
-- `getTopRatedPerfumes(limit)` - Get highest-rated fragrances
-- `getRandomPerfumes(limit)` - Get random selection
-- `getUniqueBrands()` - Get all unique brands
-- `getUniqueNotes()` - Get all unique fragrance notes
+### Curated Collections
+- **Most Popular** — sorted by community votes
+- **Top Rated** — sorted by rating
+- **New Arrivals** — sorted by release year
+
+### Filtering & Sorting
+- Gender filter (All / Women / Men / Unisex)
+- Brand dropdown filter
+- Sort by rating, votes, name, or year
+
+### Authentication
+- Google OAuth sign-in via NextAuth.js
+- Custom sign-in and error pages
+- Session-aware navigation with profile dropdown
+
+### Personal Collection
+- **I Have It / I Want It / I've Had It** — track fragrances per user
+- Collection stored in PostgreSQL via Prisma
+- Manage from perfume pages or the profile page
+
+### Theming
+- **Ivory** — warm light theme
+- **Noir** — dark theme with silver accents
+- **Midnight** — cool dark steel theme
+- Persisted to `localStorage`, applied via CSS classes
 
 ### API Endpoints
 
-- `GET /api/search?q=query&limit=5` - Search perfumes with suggestions
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/search?q=query&limit=5` | Search perfumes with suggestions |
+| `GET /api/fragrances?type=featured&limit=12` | Featured or top-rated fragrances |
+| `GET /api/brands` | All unique brands |
+| `GET/POST/PUT/DELETE /api/collection` | User collection CRUD (authenticated) |
 
-## Perfumes.json Structure
+### Static Pages
+- **About** — philosophy and mission
+- **Contact** — contact form
+- **Privacy** — privacy policy
 
-Each perfume object contains:
-```javascript
-{
-  "title": "Perfume Name Brand",
-  "designer": "Brand Name",
-  "description": "Detailed description",
-  "notes": ["Top Notes", "Heart Notes", "Base Notes"],
-  "rating": "4.5",
-  "reviews": ["Review 1", "Review 2"],
-  "url": "https://...",
-  "image": "url_to_image"
-}
-```
+## Database Schema
+
+Managed by Prisma with PostgreSQL:
+
+- **User** — id, name, email, image, timestamps
+- **Account** — OAuth account linking (NextAuth)
+- **Session** — session management (NextAuth)
+- **Collection** — user fragrance shelf (`perfumeId`, `status`: HAVE / WANT / HAD)
+- **VerificationToken** — NextAuth verification
 
 ## Design System
 
-### Colors
-- **Primary**: Black (#1a1a1a) and White (#ffffff)
-- **Accent**: Gold (#D4AF37)
-- **Neutral Backgrounds**: Light Gray (#f8f8f8)
+### Themes
+| Theme | Background | Accent | Feel |
+|-------|-----------|--------|------|
+| Ivory | Warm white | Gold (#D4AF37) | Light, luxurious |
+| Noir | Dark (#1a1a1a) | Silver | Dark, elegant |
+| Midnight | Cool dark | Steel blue | Cool, modern |
 
 ### Typography
-- **Titles & Headlines**: Georgia/Garamond (Serif)
-- **Body**: System fonts (clean sans-serif)
+- **Headers**: EB Garamond (serif) — full Cyrillic + Latin support
+- **Body**: Inter (sans-serif) — clean readability
+
+### Layout
+- Mobile-first responsive design
+- Sticky scroll-aware navbar with hamburger menu
+- Max content width: 72rem
 - **Letter Spacing**: Added to headers for luxury feel
 
 ### Spacing & Layout

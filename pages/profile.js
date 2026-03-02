@@ -159,7 +159,7 @@ export default function Profile() {
   if (!session) return null;
 
   const user = session.user;
-  const joinDate = new Date().toLocaleDateString('en-US', {
+  const joinDate = new Date(user.createdAt || Date.now()).toLocaleDateString('en-US', {
     month: 'long',
     year: 'numeric',
   });

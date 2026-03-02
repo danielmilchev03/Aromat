@@ -14,6 +14,15 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Smooth theme transition — applied temporarily during theme switches */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.45s ease, color 0.45s ease, border-color 0.45s ease,
+              box-shadow 0.45s ease, fill 0.45s ease, stroke 0.45s ease !important;
+}
+
 body {
   background-color: #ffffff;
   color: #1a1a1a;
@@ -200,6 +209,22 @@ h2 {
   background-size: 32px 32px;
 }
 
+/* ===== SEARCH TABS ===== */
+.search-tab-container {
+  background-color: rgba(243, 244, 246, 0.8);
+}
+.search-tab-active {
+  background-color: #ffffff;
+  color: #000000;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.search-tab-inactive {
+  color: #6B7280;
+}
+.search-tab-inactive:hover {
+  color: #000000;
+}
+
 /* ===== DIVIDER ===== */
 .divider-accent {
   @apply flex items-center gap-4 justify-center;
@@ -224,4 +249,697 @@ h2 {
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* =======================================================
+   DARK MODE
+   Uses html.dark class toggled via ThemeContext.
+   Overrides Tailwind utility classes using CSS specificity.
+   ======================================================= */
+
+html.dark {
+  color-scheme: dark;
+}
+
+/* --- Base --- */
+html.dark body {
+  background-color: #0f0f0f;
+  color: #e5e5e5;
+}
+
+html.dark ::selection {
+  background-color: rgba(192, 197, 206, 0.25);
+  color: #ffffff;
+}
+
+/* --- Scrollbar --- */
+html.dark ::-webkit-scrollbar-track {
+  background: #0f0f0f;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #333;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #C0C5CE;
+}
+
+/* --- Silver accent (polished sterling) --- */
+html.dark .text-accent {
+  color: #C0C5CE;
+}
+html.dark .bg-accent {
+  background-color: #C0C5CE;
+}
+html.dark .border-accent {
+  border-color: #C0C5CE;
+}
+html.dark .bg-accent\/10 {
+  background-color: rgba(192, 197, 206, 0.1);
+}
+html.dark .bg-accent\/5 {
+  background-color: rgba(192, 197, 206, 0.05);
+}
+html.dark .ring-accent\/30 {
+  --tw-ring-color: rgba(192, 197, 206, 0.3);
+}
+html.dark .hover\:text-accent:hover {
+  color: #C0C5CE;
+}
+html.dark .hover\:bg-accent:hover {
+  background-color: #C0C5CE;
+}
+html.dark .hover\:ring-accent\/30:hover {
+  --tw-ring-color: rgba(192, 197, 206, 0.3);
+}
+html.dark .group:hover .group-hover\:ring-accent\/30 {
+  --tw-ring-color: rgba(192, 197, 206, 0.3);
+}
+
+/* --- Background utilities --- */
+html.dark .bg-white {
+  background-color: #141414;
+}
+html.dark .bg-light-bg {
+  background-color: #0a0a0a;
+}
+html.dark .bg-gray-50 {
+  background-color: #1a1a1a;
+}
+html.dark .bg-gray-50\/50 {
+  background-color: rgba(26, 26, 26, 0.5);
+}
+html.dark .bg-gray-100 {
+  background-color: #1f1f1f;
+}
+html.dark .bg-gray-100\/50 {
+  background-color: rgba(31, 31, 31, 0.5);
+}
+html.dark .bg-gray-200 {
+  background-color: #2a2a2a;
+}
+html.dark .bg-gray-200\/60 {
+  background-color: rgba(42, 42, 42, 0.6);
+}
+html.dark .bg-gray-800 {
+  background-color: #d4d4d4;
+}
+html.dark .bg-white\/90 {
+  background-color: rgba(20, 20, 20, 0.9);
+}
+
+/* --- Text utilities --- */
+html.dark .text-black {
+  color: #f5f5f5;
+}
+html.dark .text-gray-900 {
+  color: #e5e5e5;
+}
+html.dark .text-gray-800 {
+  color: #d4d4d4;
+}
+html.dark .text-gray-700 {
+  color: #b0b0b0;
+}
+html.dark .text-gray-600 {
+  color: #999;
+}
+html.dark .text-gray-500 {
+  color: #888;
+}
+html.dark .text-gray-400 {
+  color: #666;
+}
+html.dark .text-gray-300 {
+  color: #555;
+}
+html.dark .text-gray-200 {
+  color: #444;
+}
+
+/* --- Border utilities --- */
+html.dark .border-gray-100 {
+  border-color: #1f1f1f;
+}
+html.dark .border-gray-200 {
+  border-color: #2a2a2a;
+}
+html.dark .border-gray-200\/80 {
+  border-color: rgba(42, 42, 42, 0.8);
+}
+html.dark .border-gray-200\/50 {
+  border-color: rgba(42, 42, 42, 0.5);
+}
+html.dark .border-gray-300 {
+  border-color: #333;
+}
+html.dark .border-gray-800\/50 {
+  border-color: rgba(50, 50, 50, 0.5);
+}
+
+/* --- Ring utilities --- */
+html.dark .ring-gray-100 {
+  --tw-ring-color: #2a2a2a;
+}
+
+/* --- Gradient utilities --- */
+html.dark .from-gray-50 {
+  --tw-gradient-from: #1a1a1a;
+}
+html.dark .to-gray-100 {
+  --tw-gradient-to: #1f1f1f;
+}
+html.dark .from-white\/90 {
+  --tw-gradient-from: rgba(20, 20, 20, 0.9);
+}
+
+/* --- Glass effect --- */
+html.dark .glass {
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* --- Shadow overrides --- */
+html.dark .shadow-card {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+html.dark .shadow-card-hover {
+  box-shadow: 0 0 0 1px rgba(192, 197, 206, 0.1), 0 20px 40px -12px rgba(0, 0, 0, 0.5);
+}
+html.dark .card-hover:hover {
+  box-shadow: 0 0 0 1px rgba(192, 197, 206, 0.12), 0 20px 40px -12px rgba(0, 0, 0, 0.5);
+}
+html.dark .shadow-soft {
+  box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.3), 0 10px 20px -2px rgba(0, 0, 0, 0.2);
+}
+html.dark .shadow-soft-lg {
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+}
+html.dark .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+}
+html.dark .shadow-sm {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+html.dark .shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Pattern background --- */
+html.dark .bg-pattern {
+  background-image: radial-gradient(circle at 1px 1px, rgba(192, 197, 206, 0.05) 1px, transparent 0);
+}
+
+/* --- Silver gradients --- */
+html.dark .gold-gradient {
+  background: linear-gradient(135deg, #A0A8B4, #C0C5CE, #D8DCE2, #C0C5CE, #A0A8B4);
+}
+html.dark .gold-gradient-text {
+  background: linear-gradient(135deg, #A0A8B4, #C0C5CE, #DDE0E6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Silver divider --- */
+html.dark .divider-accent::before,
+html.dark .divider-accent::after {
+  background-color: rgba(192, 197, 206, 0.35);
+}
+
+/* --- Silver buttons --- */
+html.dark .btn-primary {
+  background-color: #C0C5CE;
+  color: #0f0f0f;
+}
+
+/* --- Search tabs --- */
+html.dark .search-tab-container {
+  background-color: rgba(31, 31, 31, 0.8);
+}
+html.dark .search-tab-active {
+  background-color: #2a2a2a;
+  color: #f5f5f5;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+html.dark .search-tab-inactive {
+  color: #aaaaaa;
+}
+html.dark .search-tab-inactive:hover {
+  color: #f5f5f5;
+}
+html.dark .btn-primary:hover {
+  background-color: #AEB4BE;
+  transform: translateY(-1px);
+}
+html.dark .btn-secondary {
+  border-color: #C0C5CE;
+  color: #C0C5CE;
+}
+html.dark .btn-secondary:hover {
+  background-color: #C0C5CE;
+  color: #0f0f0f;
+  box-shadow: 0 4px 12px rgba(192, 197, 206, 0.2);
+}
+html.dark .shadow-gold {
+  box-shadow: 0 4px 14px -2px rgba(192, 197, 206, 0.2);
+}
+html.dark .hover\:shadow-gold:hover {
+  box-shadow: 0 4px 14px -2px rgba(192, 197, 206, 0.2);
+}
+
+/* --- Button overrides --- */
+html.dark .btn-dark {
+  background-color: #f5f5f5;
+  color: #0f0f0f;
+}
+html.dark .btn-dark:hover {
+  background-color: #e0e0e0;
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.1);
+}
+
+/* --- Hover state overrides --- */
+html.dark .hover\:bg-gray-50:hover {
+  background-color: #1f1f1f;
+}
+html.dark .hover\:bg-gray-100:hover {
+  background-color: #222;
+}
+html.dark .hover\:text-black:hover {
+  color: #f5f5f5;
+}
+html.dark .hover\:border-gray-300:hover {
+  border-color: #383838;
+}
+html.dark .hover\:border-gray-400:hover {
+  border-color: #444;
+}
+html.dark .hover\:text-gray-700:hover {
+  color: #b0b0b0;
+}
+
+/* --- Colored state overrides (collection buttons, errors) --- */
+html.dark .bg-emerald-50 {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+html.dark .bg-rose-50 {
+  background-color: rgba(244, 63, 94, 0.1);
+}
+html.dark .bg-amber-50 {
+  background-color: rgba(245, 158, 11, 0.1);
+}
+html.dark .bg-red-50 {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+html.dark .bg-red-50\/50 {
+  background-color: rgba(239, 68, 68, 0.08);
+}
+html.dark .hover\:bg-red-50\/50:hover {
+  background-color: rgba(239, 68, 68, 0.08);
+}
+html.dark .border-emerald-300 {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+html.dark .border-rose-300 {
+  border-color: rgba(244, 63, 94, 0.3);
+}
+html.dark .border-amber-300 {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+html.dark .border-red-100 {
+  border-color: rgba(239, 68, 68, 0.2);
+}
+html.dark .border-red-200 {
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+/* --- Option elements (OS-rendered, needs explicit dark) --- */
+html.dark option {
+  background-color: #1a1a1a;
+  color: #e5e5e5;
+}
+
+/* --- Footer refinement (already dark, subtle tweak) --- */
+html.dark footer.bg-black {
+  background-color: #050505;
+}
+
+/* --- Transitions for theme switch --- */
+html.dark body,
+html.dark .bg-white,
+html.dark .bg-light-bg,
+html.dark .bg-gray-50,
+html.dark .bg-gray-100,
+html.dark .glass,
+html.dark .text-black,
+html.dark .text-gray-900,
+html.dark .text-gray-800,
+html.dark .text-gray-700,
+html.dark .text-gray-600,
+html.dark .text-gray-500 {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* =======================================================
+   MIDNIGHT THEME
+   Layered on top of dark mode (html.dark.midnight).
+   Replaces gold accent with polished silver and shifts
+   dark backgrounds to a subtle cool-blue tint.
+   ======================================================= */
+
+/* --- Silver accent --- */
+html.midnight .text-accent {
+  color: #A8B8CC;
+}
+html.midnight .bg-accent {
+  background-color: #A8B8CC;
+}
+html.midnight .border-accent {
+  border-color: #A8B8CC;
+}
+html.midnight .bg-accent\/10 {
+  background-color: rgba(168, 184, 204, 0.1);
+}
+html.midnight .bg-accent\/5 {
+  background-color: rgba(168, 184, 204, 0.05);
+}
+html.midnight .ring-accent\/30 {
+  --tw-ring-color: rgba(168, 184, 204, 0.3);
+}
+html.midnight .hover\:text-accent:hover {
+  color: #A8B8CC;
+}
+html.midnight .hover\:ring-accent\/30:hover {
+  --tw-ring-color: rgba(168, 184, 204, 0.3);
+}
+html.midnight .group:hover .group-hover\:ring-accent\/30 {
+  --tw-ring-color: rgba(168, 184, 204, 0.3);
+}
+
+/* --- Base --- */
+html.midnight body {
+  background-color: #0c1018;
+}
+html.midnight ::selection {
+  background-color: rgba(168, 184, 204, 0.25);
+  color: #ffffff;
+}
+
+/* --- Scrollbar --- */
+html.midnight ::-webkit-scrollbar-track {
+  background: #0c1018;
+}
+html.midnight ::-webkit-scrollbar-thumb {
+  background: #253040;
+}
+html.midnight ::-webkit-scrollbar-thumb:hover {
+  background: #A8B8CC;
+}
+
+/* --- Blue-tinted backgrounds --- */
+html.midnight .bg-white {
+  background-color: #111822;
+}
+html.midnight .bg-light-bg {
+  background-color: #080c14;
+}
+html.midnight .bg-gray-50 {
+  background-color: #0f1520;
+}
+html.midnight .bg-gray-50\/50 {
+  background-color: rgba(15, 21, 32, 0.5);
+}
+html.midnight .bg-gray-100 {
+  background-color: #141c28;
+}
+html.midnight .bg-gray-100\/50 {
+  background-color: rgba(20, 28, 40, 0.5);
+}
+html.midnight .bg-gray-200 {
+  background-color: #1a2436;
+}
+html.midnight .bg-gray-200\/60 {
+  background-color: rgba(26, 36, 54, 0.6);
+}
+html.midnight .bg-gray-800 {
+  background-color: #c4ccda;
+}
+html.midnight .bg-white\/90 {
+  background-color: rgba(17, 24, 34, 0.9);
+}
+
+/* --- Cool-toned text --- */
+html.midnight .text-black {
+  color: #e6edf3;
+}
+html.midnight .text-gray-900 {
+  color: #d8dee8;
+}
+html.midnight .text-gray-800 {
+  color: #c4ccda;
+}
+html.midnight .text-gray-700 {
+  color: #9eaab8;
+}
+html.midnight .text-gray-600 {
+  color: #8892a4;
+}
+html.midnight .text-gray-500 {
+  color: #768494;
+}
+html.midnight .text-gray-400 {
+  color: #5c6a7a;
+}
+html.midnight .text-gray-300 {
+  color: #4a5568;
+}
+html.midnight .text-gray-200 {
+  color: #3a4a5c;
+}
+
+/* --- Blue-tinted borders --- */
+html.midnight .border-gray-100 {
+  border-color: #152030;
+}
+html.midnight .border-gray-200 {
+  border-color: #1c2a3c;
+}
+html.midnight .border-gray-200\/80 {
+  border-color: rgba(28, 42, 60, 0.8);
+}
+html.midnight .border-gray-200\/50 {
+  border-color: rgba(28, 42, 60, 0.5);
+}
+html.midnight .border-gray-300 {
+  border-color: #253548;
+}
+html.midnight .border-gray-800\/50 {
+  border-color: rgba(30, 42, 58, 0.5);
+}
+
+/* --- Ring --- */
+html.midnight .ring-gray-100 {
+  --tw-ring-color: #1c2a3c;
+}
+
+/* --- Gradients --- */
+html.midnight .from-gray-50 {
+  --tw-gradient-from: #0f1520;
+}
+html.midnight .to-gray-100 {
+  --tw-gradient-to: #141c28;
+}
+html.midnight .from-white\/90 {
+  --tw-gradient-from: rgba(17, 24, 34, 0.9);
+}
+
+/* --- Glass --- */
+html.midnight .glass {
+  background: rgba(12, 16, 24, 0.88);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* --- Shadows with cool tint --- */
+html.midnight .shadow-card {
+  box-shadow: 0 0 0 1px rgba(168, 184, 204, 0.04), 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+html.midnight .shadow-card-hover {
+  box-shadow: 0 0 0 1px rgba(168, 184, 204, 0.1), 0 20px 40px -12px rgba(0, 0, 0, 0.5);
+}
+html.midnight .card-hover:hover {
+  box-shadow: 0 0 0 1px rgba(168, 184, 204, 0.12), 0 20px 40px -12px rgba(0, 6, 20, 0.5);
+}
+html.midnight .shadow-soft {
+  box-shadow: 0 2px 15px -3px rgba(0, 4, 16, 0.3), 0 10px 20px -2px rgba(0, 4, 16, 0.2);
+}
+html.midnight .shadow-soft-lg {
+  box-shadow: 0 10px 40px -10px rgba(0, 4, 16, 0.5);
+}
+html.midnight .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 4, 16, 0.5), 0 4px 6px -4px rgba(0, 4, 16, 0.4);
+}
+html.midnight .shadow-sm {
+  box-shadow: 0 1px 2px rgba(0, 4, 16, 0.3);
+}
+html.midnight .shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 4, 16, 0.4), 0 2px 4px -2px rgba(0, 4, 16, 0.3);
+}
+html.midnight .shadow-gold {
+  box-shadow: 0 4px 14px -2px rgba(168, 184, 204, 0.2);
+}
+
+/* --- Buttons --- */
+html.midnight .btn-primary {
+  background-color: #A8B8CC;
+  color: #0c1018;
+}
+
+/* --- Search tabs --- */
+html.midnight .search-tab-container {
+  background-color: rgba(20, 28, 40, 0.8);
+}
+html.midnight .search-tab-active {
+  background-color: #1a2436;
+  color: #e6edf3;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+html.midnight .search-tab-inactive {
+  color: #9eaab8;
+}
+html.midnight .search-tab-inactive:hover {
+  color: #e6edf3;
+}
+html.midnight .btn-primary:hover {
+  background-color: #8FA0B6;
+  transform: translateY(-1px);
+}
+html.midnight .btn-secondary {
+  border-color: #A8B8CC;
+  color: #A8B8CC;
+}
+html.midnight .btn-secondary:hover {
+  background-color: #A8B8CC;
+  color: #0c1018;
+  box-shadow: 0 4px 12px rgba(168, 184, 204, 0.2);
+}
+html.midnight .btn-dark {
+  background-color: #d8dee8;
+  color: #0c1018;
+}
+html.midnight .btn-dark:hover {
+  background-color: #c4ccda;
+  box-shadow: 0 8px 24px rgba(168, 184, 204, 0.1);
+}
+
+/* --- Silver gradients --- */
+html.midnight .gold-gradient {
+  background: linear-gradient(135deg, #8A9AB0, #B8C8D8, #8A9AB0);
+}
+html.midnight .gold-gradient-text {
+  background: linear-gradient(135deg, #8A9AB0, #A8B8CC, #C4D0DE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Pattern --- */
+html.midnight .bg-pattern {
+  background-image: radial-gradient(circle at 1px 1px, rgba(168, 184, 204, 0.05) 1px, transparent 0);
+}
+
+/* --- Divider accent --- */
+html.midnight .divider-accent::before,
+html.midnight .divider-accent::after {
+  background-color: rgba(168, 184, 204, 0.3);
+}
+
+/* --- Hover states --- */
+html.midnight .hover\:bg-gray-50:hover {
+  background-color: #141c28;
+}
+html.midnight .hover\:bg-gray-100:hover {
+  background-color: #182230;
+}
+html.midnight .hover\:text-black:hover {
+  color: #e6edf3;
+}
+html.midnight .hover\:border-gray-300:hover {
+  border-color: #2d3d50;
+}
+html.midnight .hover\:border-gray-400:hover {
+  border-color: #354860;
+}
+html.midnight .hover\:text-gray-700:hover {
+  color: #9eaab8;
+}
+html.midnight .hover\:shadow-gold:hover {
+  box-shadow: 0 4px 14px -2px rgba(168, 184, 204, 0.2);
+}
+
+/* --- Colored state overrides --- */
+html.midnight .bg-emerald-50 {
+  background-color: rgba(16, 185, 129, 0.08);
+}
+html.midnight .bg-rose-50 {
+  background-color: rgba(244, 63, 94, 0.08);
+}
+html.midnight .bg-amber-50 {
+  background-color: rgba(245, 158, 11, 0.08);
+}
+html.midnight .bg-red-50 {
+  background-color: rgba(239, 68, 68, 0.08);
+}
+html.midnight .bg-red-50\/50 {
+  background-color: rgba(239, 68, 68, 0.06);
+}
+html.midnight .hover\:bg-red-50\/50:hover {
+  background-color: rgba(239, 68, 68, 0.06);
+}
+html.midnight .border-emerald-300 {
+  border-color: rgba(16, 185, 129, 0.25);
+}
+html.midnight .border-rose-300 {
+  border-color: rgba(244, 63, 94, 0.25);
+}
+html.midnight .border-amber-300 {
+  border-color: rgba(245, 158, 11, 0.25);
+}
+html.midnight .border-red-100 {
+  border-color: rgba(239, 68, 68, 0.15);
+}
+html.midnight .border-red-200 {
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* --- Option elements --- */
+html.midnight option {
+  background-color: #111822;
+  color: #d8dee8;
+}
+
+/* --- Footer --- */
+html.midnight footer.bg-black {
+  background-color: #060810;
+}
+
+/* --- Loading spinner --- */
+html.midnight .border-accent {
+  border-color: #A8B8CC;
+}
+html.midnight .border-t-transparent {
+  border-top-color: transparent;
+}
+
+/* --- Transitions for midnight switch --- */
+html.midnight body,
+html.midnight .bg-white,
+html.midnight .bg-light-bg,
+html.midnight .bg-gray-50,
+html.midnight .bg-gray-100,
+html.midnight .glass,
+html.midnight .text-black,
+html.midnight .text-gray-900,
+html.midnight .text-accent {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

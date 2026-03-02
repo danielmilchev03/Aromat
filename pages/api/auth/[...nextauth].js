@@ -13,9 +13,10 @@ export const authOptions = {
   ],
   callbacks: {
     async session({ session, user }) {
-      // Attach user ID to the session object
+      // Attach user ID and creation date to the session object
       if (session?.user) {
         session.user.id = user.id;
+        session.user.createdAt = user.createdAt?.toISOString() || null;
       }
       return session;
     },

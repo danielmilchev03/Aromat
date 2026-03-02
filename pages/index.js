@@ -99,15 +99,15 @@ export default function Home({ randomPerfumes = [] }) {
               </div>
 
               {/* Feature 3 */}
-              <Link href="/search?note=" className="group bg-white rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 text-center space-y-4 block">
+              <div className="group bg-white rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 text-center space-y-4">
                 <div className="w-14 h-14 mx-auto rounded-2xl bg-accent/10 flex items-center justify-center text-accent text-2xl group-hover:scale-110 transition-transform duration-300">
                   ⟡
                 </div>
-                <h3 className="font-serif text-xl text-black group-hover:text-accent transition-colors">Search by Notes</h3>
+                <h3 className="font-serif text-xl text-black">Search by Notes</h3>
                 <p className="text-gray-500 text-sm leading-relaxed">
                   Find fragrances by notes like vanilla, rose, oud, musk, and more.
                 </p>
-              </Link>
+              </div>
             </div>
           </div>
         </section>
@@ -162,7 +162,7 @@ export default function Home({ randomPerfumes = [] }) {
               <Link href="/search" className="btn-primary text-base">
                 Advanced Search
               </Link>
-              <Link href="/gallery" className="btn-secondary text-base">
+              <Link href="/gallery" className="btn-primary text-base">
                 View Gallery
               </Link>
             </div>

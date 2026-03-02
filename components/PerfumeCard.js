@@ -18,11 +18,12 @@ export default function PerfumeCard({ perfume, featured = false }) {
           {/* Image Container */}
           <div className="bg-gray-50 aspect-[4/5] overflow-hidden relative flex-shrink-0">
             {perfume.image_url ? (
-              <img
+              <Image
                 src={perfume.image_url}
                 alt={perfume.name}
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                loading="lazy"
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">

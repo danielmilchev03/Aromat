@@ -100,7 +100,7 @@ export default function About() {
             <h2 className="font-serif text-3xl text-black">Start Exploring</h2>
             <p className="text-gray-500 text-base">Discover your next signature scent.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/gallery" className="btn-secondary">Browse Gallery</Link>
+              <Link href="/gallery" className="btn-primary">Browse Gallery</Link>
               <Link href="/" className="btn-primary">Go Home</Link>
             </div>
           </div>

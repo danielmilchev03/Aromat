@@ -151,8 +151,8 @@ export default function Gallery({ topRated = [], allPerfumes = [], brands = [] }
             <h2 className="font-serif text-3xl text-black">Discover Your Signature Scent</h2>
             <p className="text-gray-500">Use our advanced search to find the perfect fragrance</p>
             <div className="flex flex-wrap justify-center gap-3">
-              <Link href="/" className="btn-secondary">Explore Fragrances</Link>
               <Link href="/search" className="btn-primary">Advanced Search</Link>
+              <Link href="/" className="btn-primary">Go Home</Link>
             </div>
           </div>
         </section>
