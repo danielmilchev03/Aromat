@@ -79,7 +79,7 @@ export default function FilterBar({ brands = [], filters, onChange, showSort = t
               <select
                 value={brand}
                 onChange={(e) => update('brand', e.target.value)}
-                className="px-4 py-2 border border-gray-200 text-sm text-gray-700 bg-white rounded-xl focus:border-accent focus:ring-2 focus:ring-accent/15 outline-none transition-all min-w-[180px]"
+                className="px-4 py-2 border border-gray-200 text-sm text-gray-700 bg-white rounded-xl focus:border-accent focus:ring-2 focus:ring-accent/15 outline-none transition-all w-[180px]"
               >
                 <option value="all">All Brands</option>
                 {brands.map((b) => (
@@ -96,7 +96,7 @@ export default function FilterBar({ brands = [], filters, onChange, showSort = t
               <select
                 value={sort}
                 onChange={(e) => update('sort', e.target.value)}
-                className="px-4 py-2 border border-gray-200 text-sm text-gray-700 bg-white rounded-xl focus:border-accent focus:ring-2 focus:ring-accent/15 outline-none transition-all min-w-[160px]"
+                className="px-4 py-2 border border-gray-200 text-sm text-gray-700 bg-white rounded-xl focus:border-accent focus:ring-2 focus:ring-accent/15 outline-none transition-all w-[180px]"
               >
                 {SORT_OPTIONS.map((opt) => (
                   <option key={opt.id} value={opt.id}>{opt.label}</option>

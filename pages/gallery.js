@@ -1,17 +1,68 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
-import { getPerfumes, getTopRatedPerfumes, getUniqueBrands } from '../lib/api';
+import { getPerfumes, getTopRatedPerfumes, getNewArrivals, getUniqueBrands } from '../lib/api';
 import PerfumeCard from '../components/PerfumeCard';
 import Navbar from '../components/Navbar';
 import FilterBar, { applyFilters, extractBrands } from '../components/FilterBar';
 import Footer from '../components/Footer';
 
-export default function Gallery({ topRated = [], allPerfumes = [], brands = [] }) {
+const VALID_VIEWS = ['toprated', 'newarrivals', 'all'];
+
+export default function Gallery({ topRated = [], allPerfumes = [], newArrivals = [], brands = [] }) {
+  const router = useRouter();
+  const viewFromQuery = typeof router.query.view === 'string' && VALID_VIEWS.includes(router.query.view)
+    ? router.query.view
+    : 'toprated';
+
   const [filters, setFilters] = useState({ gender: 'all', brand: 'all', sort: 'default' });
-  const [displayMode, setDisplayMode] = useState('toprated');
+  const [displayMode, setDisplayMode] = useState(viewFromQuery);
   const [genderTopRated, setGenderTopRated] = useState(topRated);
   const [loadingTopRated, setLoadingTopRated] = useState(false);
+
+  // Sync displayMode when router query becomes available (after hydration)
+  useEffect(() => {
+    if (router.isReady && router.query.view && VALID_VIEWS.includes(router.query.view)) {
+      setDisplayMode(router.query.view);
+    }
+  }, [router.isReady, router.query.view]);
+
+  // Update URL query param when view changes (shallow, no re-fetch)
+  const changeView = (newMode) => {
+    setDisplayMode(newMode);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    router.replace(
+      { pathname: '/gallery', query: newMode === 'toprated' ? {} : { view: newMode } },
+      undefined,
+      { shallow: true, scroll: false }
+    );
+  };
+
+  // Restore scroll position after hydration (only for the same view)
+  useEffect(() => {
+    const savedView = sessionStorage.getItem('gallery-scroll-view');
+    const savedY = sessionStorage.getItem('gallery-scroll-y');
+    if (savedView && savedY && router.isReady) {
+      const currentView = router.query.view || 'toprated';
+      if (savedView === currentView) {
+        const y = parseInt(savedY, 10);
+        if (!isNaN(y)) {
+          requestAnimationFrame(() => window.scrollTo(0, y));
+        }
+      }
+      sessionStorage.removeItem('gallery-scroll-view');
+      sessionStorage.removeItem('gallery-scroll-y');
+    }
+
+    const saveScroll = () => {
+      const currentView = new URLSearchParams(window.location.search).get('view') || 'toprated';
+      sessionStorage.setItem('gallery-scroll-view', currentView);
+      sessionStorage.setItem('gallery-scroll-y', String(window.scrollY));
+    };
+    window.addEventListener('beforeunload', saveScroll);
+    return () => window.removeEventListener('beforeunload', saveScroll);
+  }, [router.isReady, router.query.view]);
 
   // Re-fetch top-rated when gender filter changes so we get top 24 for that gender
   useEffect(() => {
@@ -43,6 +94,8 @@ export default function Gallery({ topRated = [], allPerfumes = [], brands = [] }
     switch (displayMode) {
       case 'all':
         return allPerfumes;
+      case 'newarrivals':
+        return newArrivals;
       case 'toprated':
       default:
         return genderTopRated;
@@ -50,11 +103,12 @@ export default function Gallery({ topRated = [], allPerfumes = [], brands = [] }
   };
 
   const perfumesBeforeFilter = getDisplayPerfumes();
-  const allBrands = extractBrands(perfumesBeforeFilter).length > 0
-    ? extractBrands(perfumesBeforeFilter)
-    : brands;
+  // Always use the full brand list so dropdowns stay consistent across views
+  const allBrands = brands.length > 0 ? brands : extractBrands(allPerfumes);
   // For top-rated mode, gender filtering is already done server-side; only apply brand/sort
   const filtersForApply = displayMode === 'toprated'
+    ? { ...filters, gender: 'all' }
+    : displayMode === 'newarrivals'
     ? { ...filters, gender: 'all' }
     : filters;
   const displayPerfumes = applyFilters(perfumesBeforeFilter, filtersForApply);
@@ -89,11 +143,12 @@ export default function Gallery({ topRated = [], allPerfumes = [], brands = [] }
               <span className="text-[10px] text-gray-400 uppercase tracking-[0.15em] font-medium mr-2">View:</span>
               {[
                 { id: 'toprated', label: 'Top Rated' },
+                { id: 'newarrivals', label: 'New Arrivals' },
                 { id: 'all', label: 'All Perfumes' },
               ].map((mode) => (
                 <button
                   key={mode.id}
-                  onClick={() => setDisplayMode(mode.id)}
+                  onClick={() => changeView(mode.id)}
                   className={`px-5 py-2 text-sm rounded-full transition-all duration-200 ${
                     displayMode === mode.id
                       ? 'bg-accent text-white shadow-sm'
@@ -167,6 +222,7 @@ export default function Gallery({ topRated = [], allPerfumes = [], brands = [] }
 export async function getServerSideProps() {
   try {
     const topRated = await getTopRatedPerfumes(24);
+    const newArrivalsData = await getNewArrivals(24);
     const allData = await getPerfumes(500, 0);
     const allPerfumes = allData.perfumes || [];
     const brands = await getUniqueBrands();
@@ -175,6 +231,7 @@ export async function getServerSideProps() {
       props: {
         topRated,
         allPerfumes,
+        newArrivals: newArrivalsData,
         brands,
       },
     };
@@ -184,6 +241,7 @@ export async function getServerSideProps() {
       props: {
         topRated: [],
         allPerfumes: [],
+        newArrivals: [],
         brands: [],
       },
     };

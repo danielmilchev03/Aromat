@@ -103,8 +103,8 @@ export default function TopRated({ perfumes = [] }) {
           <div className="max-w-6xl mx-auto px-6 text-center space-y-8">
             <h2 className="font-serif text-3xl text-black">Explore More Collections</h2>
             <div className="flex flex-wrap justify-center gap-3">
-              <Link href="/collections/most-popular" className="btn-secondary">Most Popular</Link>
-              <Link href="/collections/new-arrivals" className="btn-secondary">New Arrivals</Link>
+              <Link href="/collections/most-popular" className="btn-primary">Most Popular</Link>
+              <Link href="/collections/new-arrivals" className="btn-primary">New Arrivals</Link>
               <Link href="/gallery" className="btn-primary">Full Gallery</Link>
             </div>
           </div>

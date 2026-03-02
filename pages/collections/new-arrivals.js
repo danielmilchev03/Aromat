@@ -53,8 +53,8 @@ export default function NewArrivals({ perfumes = [] }) {
           <div className="max-w-6xl mx-auto px-6 text-center space-y-8">
             <h2 className="font-serif text-3xl text-black">Explore More Collections</h2>
             <div className="flex flex-wrap justify-center gap-3">
-              <Link href="/collections/top-rated" className="btn-secondary">Top Rated</Link>
-              <Link href="/collections/most-popular" className="btn-secondary">Most Popular</Link>
+              <Link href="/collections/top-rated" className="btn-primary">Top Rated</Link>
+              <Link href="/collections/most-popular" className="btn-primary">Most Popular</Link>
               <Link href="/gallery" className="btn-primary">Full Gallery</Link>
             </div>
           </div>
