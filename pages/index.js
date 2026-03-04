@@ -20,10 +20,12 @@ export default function Home({ randomPerfumes = [] }) {
         <Navbar />
 
         {/* Hero Section */}
-        <section className="relative w-full flex flex-col items-center justify-center px-6 pt-32 pb-24 min-h-[85vh] bg-pattern overflow-hidden">
-          {/* Decorative elements */}
-          <div className="absolute top-20 left-10 w-72 h-72 bg-accent/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+        <section className="relative w-full flex flex-col items-center justify-center px-6 pt-32 pb-24 min-h-[85vh] bg-pattern">
+          {/* Decorative elements – contained in own clipped layer so the search dropdown can overflow */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+            <div className="absolute top-20 left-10 w-72 h-72 bg-accent/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+          </div>
 
           <div className="relative max-w-4xl text-center space-y-10">
             {/* Logo/Branding */}
@@ -64,51 +66,6 @@ export default function Home({ randomPerfumes = [] }) {
             <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-24 bg-light-bg">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center space-y-4 mb-16">
-              <p className="divider-accent text-accent text-xs font-serif tracking-[0.3em] uppercase">Why Choose Us</p>
-              <h2 className="font-serif text-4xl md:text-5xl text-black">Why Aromat?</h2>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {/* Feature 1 */}
-              <div className="group bg-white rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 text-center space-y-4">
-                <div className="w-14 h-14 mx-auto rounded-2xl bg-accent/10 flex items-center justify-center text-accent text-2xl group-hover:scale-110 transition-transform duration-300">
-                  ✦
-                </div>
-                <h3 className="font-serif text-xl text-black">Clean Design</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  Elegant minimalism. No clutter. Just the fragrances that matter.
-                </p>
-              </div>
-
-              {/* Feature 2 */}
-              <div className="group bg-white rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 text-center space-y-4">
-                <div className="w-14 h-14 mx-auto rounded-2xl bg-accent/10 flex items-center justify-center text-accent text-2xl group-hover:scale-110 transition-transform duration-300">
-                  ◆
-                </div>
-                <h3 className="font-serif text-xl text-black">Scent Pyramids</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  Visualize how fragrances evolve from top to base notes.
-                </p>
-              </div>
-
-              {/* Feature 3 */}
-              <div className="group bg-white rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 text-center space-y-4">
-                <div className="w-14 h-14 mx-auto rounded-2xl bg-accent/10 flex items-center justify-center text-accent text-2xl group-hover:scale-110 transition-transform duration-300">
-                  ⟡
-                </div>
-                <h3 className="font-serif text-xl text-black">Search by Notes</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  Find fragrances by notes like vanilla, rose, oud, musk, and more.
-                </p>
-              </div>
-            </div>
           </div>
         </section>
 

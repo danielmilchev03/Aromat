@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
 import Footer from '../components/Footer';
 
-export default function SearchResults({ results = [], query = '', note = '' }) {
+export default function SearchResults({ results = [], query = '', note = '', matchedBrand = '' }) {
   const isNoteSearch = !!note;
   const hasSearched = !!(query || note);
 
@@ -37,15 +37,24 @@ export default function SearchResults({ results = [], query = '', note = '' }) {
       <main className="min-h-screen bg-white">
         <Navbar />
 
-        {/* Search Section */}
-        <section className="pt-28 pb-12 bg-pattern">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="max-w-2xl mx-auto space-y-6">
-              <div className="text-center space-y-3">
-                <p className="divider-accent text-accent text-xs font-serif tracking-[0.3em] uppercase">Find Your Fragrance</p>
-                <h1 className="font-serif text-4xl md:text-5xl text-black">Search</h1>
-              </div>
+        {/* Search Hero */}
+        <section className="relative pt-32 pb-16 bg-pattern z-10">
+          {/* Decorative blurs */}
+          <div className="absolute top-16 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
 
+          <div className="relative max-w-2xl mx-auto px-6 space-y-8">
+            <div className="text-center space-y-3 animate-fade-in-up">
+              <p className="text-accent text-sm font-serif tracking-[0.3em] uppercase">Olfactory Search</p>
+              <h1 className="font-serif text-5xl md:text-6xl font-light text-black tracking-tight">
+                Find Your Scent
+              </h1>
+              <p className="text-gray-400 text-base max-w-md mx-auto leading-relaxed">
+                Search by name, brand, or explore through fragrance notes.
+              </p>
+            </div>
+
+            <div className="animate-fade-in-up delay-200 relative z-10">
               <SearchBar
                 initialTab={isNoteSearch ? 'notes' : 'name'}
                 initialQuery={query}
@@ -55,25 +64,60 @@ export default function SearchResults({ results = [], query = '', note = '' }) {
           </div>
         </section>
 
-        {/* Results */}
+        {/* Results / Empty States */}
         <section className="py-16">
           <div className="max-w-6xl mx-auto px-6">
+
+            {/* Has results */}
             {hasSearched && results.length > 0 && (
               <>
-                <p className="text-center text-gray-600 mb-8">
-                  Found <span className="font-serif text-accent">{results.length}</span> fragrance{results.length !== 1 ? 's' : ''}
-                  {isNoteSearch && (
-                    <> with <span className="font-serif text-accent">&ldquo;{note}&rdquo;</span></>
-                  )}
-                  {query && !isNoteSearch && (
-                    <> for <span className="font-serif text-accent">&ldquo;{query}&rdquo;</span></>
-                  )}
-                </p>
+                {/* Brand page link banner */}
+                {matchedBrand && !isNoteSearch && (
+                  <div className="mb-8 animate-fade-in-up">
+                    <Link
+                      href={`/brand/${encodeURIComponent(matchedBrand)}`}
+                      className="block p-5 rounded-2xl border border-accent/20 bg-accent/5 hover:bg-accent/10 hover:border-accent/30 transition-all duration-300 group"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-accent/15 flex items-center justify-center flex-shrink-0 group-hover:bg-accent/25 transition-colors">
+                          <svg className="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          </svg>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-serif text-lg text-accent font-medium">
+                            View all {matchedBrand} perfumes
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            Browse the complete {matchedBrand} collection
+                          </p>
+                        </div>
+                        <svg className="w-5 h-5 text-accent flex-shrink-0 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </div>
+                    </Link>
+                  </div>
+                )}
+
+                <div className="text-center mb-12 space-y-1">
+                  <p className="text-sm text-gray-400 uppercase tracking-widest font-serif">Results</p>
+                  <p className="text-gray-600">
+                    <span className="font-serif text-accent text-lg">{results.length}</span>{' '}
+                    fragrance{results.length !== 1 ? 's' : ''}
+                    {isNoteSearch && (
+                      <> containing <span className="font-serif text-accent">&ldquo;{note}&rdquo;</span></>
+                    )}
+                    {query && !isNoteSearch && (
+                      <> matching <span className="font-serif text-accent">&ldquo;{query}&rdquo;</span></>
+                    )}
+                  </p>
+                </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {results.map((perfume, idx) => {
                     const matched = isNoteSearch ? getMatchedNotes(perfume) : [];
                     return (
-                      <div key={perfume.id || idx} className="relative">
+                      <div key={perfume.id || idx} className="relative animate-fade-in-up" style={{ animationDelay: `${idx * 60}ms` }}>
                         <PerfumeCard perfume={perfume} />
                         {matched.length > 0 && (
                           <div className="mt-2 flex flex-wrap gap-1.5">
@@ -94,49 +138,83 @@ export default function SearchResults({ results = [], query = '', note = '' }) {
               </>
             )}
 
+            {/* No results */}
             {hasSearched && results.length === 0 && (
-              <div className="text-center py-20 space-y-6">
-                <div className="w-16 h-16 mx-auto rounded-full bg-gray-100 flex items-center justify-center">
-                  <svg className="w-7 h-7 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="text-center py-24 space-y-6 animate-fade-in-up">
+                <div className="w-20 h-20 mx-auto rounded-full bg-gray-50 flex items-center justify-center">
+                  <svg className="w-8 h-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
-                <h2 className="font-serif text-2xl text-black">No Fragrances Found</h2>
-                <p className="text-gray-500 max-w-md mx-auto text-sm">
-                  {isNoteSearch
-                    ? `We couldn't find any fragrances with the note "${note}". Try a different note.`
-                    : `We couldn't find any fragrances matching "${query}". Try different keywords.`}
-                </p>
-                <Link href="/" className="btn-primary inline-flex mt-6">
-                  &larr; Back to Home
-                </Link>
+                <div className="space-y-2">
+                  <h2 className="font-serif text-3xl text-black">No Results</h2>
+                  <p className="text-gray-400 max-w-sm mx-auto text-sm leading-relaxed">
+                    {isNoteSearch
+                      ? `No fragrances found with the note "${note}". Try a different note or browse our gallery.`
+                      : `Nothing matched "${query}". Try adjusting your search or explore our collection.`}
+                  </p>
+                </div>
+                <div className="flex gap-3 justify-center pt-4">
+                  <Link href="/gallery" className="btn-secondary text-sm">
+                    Browse Gallery
+                  </Link>
+                  <Link href="/" className="btn-dark text-sm">
+                    Back Home
+                  </Link>
+                </div>
               </div>
             )}
 
+            {/* Default — no search yet */}
             {!hasSearched && (
-              <section className="bg-light-bg py-16 -mx-6 px-6 rounded-2xl">
-                <div className="max-w-3xl mx-auto space-y-8">
-                  <h3 className="font-serif text-2xl text-black text-center">Search Tips</h3>
-                  <div className="grid md:grid-cols-3 gap-6">
-                    <div className="bg-white rounded-2xl p-6 text-center shadow-card">
-                      <div className="w-10 h-10 mx-auto rounded-xl bg-accent/10 flex items-center justify-center text-accent mb-3">✦</div>
-                      <h4 className="font-serif text-black mb-1.5 text-sm">By Brand</h4>
-                      <p className="text-xs text-gray-500">Try &ldquo;Dior&rdquo; or &ldquo;Chanel&rdquo;</p>
+              <div className="max-w-3xl mx-auto animate-fade-in-up delay-300">
+                {/* Quick links */}
+                <div className="grid sm:grid-cols-3 gap-4">
+                  <Link
+                    href="/collections/top-rated"
+                    className="group p-6 rounded-2xl border border-gray-100 hover:border-accent/30 hover:shadow-gold transition-all duration-300 text-center space-y-3"
+                  >
+                    <div className="w-10 h-10 mx-auto rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                      <span className="text-accent text-sm">★</span>
                     </div>
-                    <div className="bg-white rounded-2xl p-6 text-center shadow-card">
-                      <div className="w-10 h-10 mx-auto rounded-xl bg-accent/10 flex items-center justify-center text-accent mb-3">◆</div>
-                      <h4 className="font-serif text-black mb-1.5 text-sm">By Note</h4>
-                      <p className="text-xs text-gray-500">Switch to &ldquo;By Notes&rdquo; tab</p>
+                    <h4 className="font-serif text-base text-gray-900">Top Rated</h4>
+                    <p className="text-xs text-gray-400 leading-relaxed">The highest rated fragrances in our collection.</p>
+                  </Link>
+
+                  <Link
+                    href="/collections/most-popular"
+                    className="group p-6 rounded-2xl border border-gray-100 hover:border-accent/30 hover:shadow-gold transition-all duration-300 text-center space-y-3"
+                  >
+                    <div className="w-10 h-10 mx-auto rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                      <span className="text-accent text-sm">♦</span>
                     </div>
-                    <div className="bg-white rounded-2xl p-6 text-center shadow-card">
-                      <div className="w-10 h-10 mx-auto rounded-xl bg-accent/10 flex items-center justify-center text-accent mb-3">⟡</div>
-                      <h4 className="font-serif text-black mb-1.5 text-sm">By Fragrance</h4>
-                      <p className="text-xs text-gray-500">Search name directly</p>
+                    <h4 className="font-serif text-base text-gray-900">Most Popular</h4>
+                    <p className="text-xs text-gray-400 leading-relaxed">Community favourites loved by fragrance enthusiasts.</p>
+                  </Link>
+
+                  <Link
+                    href="/collections/new-arrivals"
+                    className="group p-6 rounded-2xl border border-gray-100 hover:border-accent/30 hover:shadow-gold transition-all duration-300 text-center space-y-3"
+                  >
+                    <div className="w-10 h-10 mx-auto rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                      <span className="text-accent text-sm">✦</span>
                     </div>
-                  </div>
+                    <h4 className="font-serif text-base text-gray-900">New Arrivals</h4>
+                    <p className="text-xs text-gray-400 leading-relaxed">Recently added fragrances to discover.</p>
+                  </Link>
                 </div>
-              </section>
+
+                <div className="text-center pt-10">
+                  <Link href="/gallery" className="btn-primary text-sm">
+                    Browse Full Gallery
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
             )}
+
           </div>
         </section>
 
@@ -151,11 +229,28 @@ export async function getServerSideProps({ query }) {
     const q = query.q || '';
     const note = query.note || '';
     let results = [];
+    let matchedBrand = '';
 
     if (note) {
       results = await searchPerfumesByNote(note, 100);
     } else if (q) {
       results = await searchPerfumes(q, 50);
+
+      // Detect if any results have a brand name matching the query
+      const qLower = q.toLowerCase().trim();
+      const brandCounts = {};
+      results.forEach((p) => {
+        if (p.brand && p.brand.toLowerCase().includes(qLower)) {
+          const key = p.brand.toLowerCase();
+          if (!brandCounts[key]) brandCounts[key] = { name: p.brand, count: 0 };
+          brandCounts[key].count++;
+        }
+      });
+      // Pick the brand with the most matches
+      const topBrand = Object.values(brandCounts).sort((a, b) => b.count - a.count)[0];
+      if (topBrand) {
+        matchedBrand = topBrand.name;
+      }
     }
 
     return {
@@ -163,6 +258,7 @@ export async function getServerSideProps({ query }) {
         results: results || [],
         query: q,
         note,
+        matchedBrand,
       },
     };
   } catch (error) {
@@ -172,6 +268,7 @@ export async function getServerSideProps({ query }) {
         results: [],
         query: query.q || '',
         note: query.note || '',
+        matchedBrand: '',
       },
     };
   }

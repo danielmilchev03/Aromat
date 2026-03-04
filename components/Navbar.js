@@ -64,6 +64,35 @@ export default function Navbar() {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
+          {/* Home button */}
+          <Link
+            href="/"
+            className={`flex items-center gap-1.5 text-sm tracking-wide transition-colors duration-200 relative group ${
+              isActive('/')
+                ? 'text-accent'
+                : 'text-gray-600 hover:text-black'
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="w-4 h-4 -mt-px"
+            >
+              <path
+                fillRule="evenodd"
+                d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Home
+            <span
+              className={`absolute -bottom-1 left-0 h-px bg-accent transition-all duration-300 ${
+                isActive('/') ? 'w-full' : 'w-0 group-hover:w-full'
+              }`}
+            />
+          </Link>
+
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -172,6 +201,19 @@ export default function Navbar() {
         }`}
       >
         <div className="glass border-t border-gray-200/50 px-6 py-4 space-y-1">
+          <Link
+            href="/"
+            className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm transition-colors ${
+              isActive('/')
+                ? 'text-accent bg-accent/5 font-medium'
+                : 'text-gray-700 hover:text-black hover:bg-gray-50'
+            }`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+              <path fillRule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clipRule="evenodd" />
+            </svg>
+            Home
+          </Link>
           {navLinks.map((link) => (
             <Link
               key={link.href}

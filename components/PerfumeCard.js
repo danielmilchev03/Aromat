@@ -1,7 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function PerfumeCard({ perfume, featured = false }) {
+  const router = useRouter();
   if (!perfume) return null;
 
   const rating = parseFloat(perfume.rating) || 0;
@@ -52,7 +54,16 @@ export default function PerfumeCard({ perfume, featured = false }) {
             <div className="space-y-2">
               {/* Brand */}
               <p className="text-accent text-[11px] font-serif tracking-[0.2em] uppercase font-medium">
-                {perfume.brand || 'Unknown Brand'}
+                <span
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    router.push(`/brand/${encodeURIComponent(perfume.brand || '')}`);
+                  }}
+                  className="hover:underline cursor-pointer transition-colors"
+                >
+                  {perfume.brand || 'Unknown Brand'}
+                </span>
               </p>
 
               {/* Title */}

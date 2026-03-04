@@ -50,45 +50,67 @@ export default function About() {
               </div>
             </div>
 
-            {/* Values */}
+            {/* What Sets Us Apart */}
             <div className="border-t border-gray-100 pt-16">
-              <h2 className="font-serif text-3xl text-black text-center mb-12">What Guides Us</h2>
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="bg-white rounded-2xl p-8 text-center space-y-4 shadow-card">
-                  <div className="w-12 h-12 mx-auto rounded-xl bg-accent/10 flex items-center justify-center text-accent text-xl">◆</div>
+              <div className="text-center space-y-4 mb-14">
+                <p className="divider-accent text-accent text-xs font-serif tracking-[0.3em] uppercase">Why Choose Us</p>
+                <h2 className="font-serif text-3xl text-black">What Sets Us Apart</h2>
+              </div>
+
+              {/* Top row — 3 feature cards */}
+              <div className="grid md:grid-cols-3 gap-8 mb-8">
+                <div className="group bg-white rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 text-center space-y-4">
+                  <div className="w-14 h-14 mx-auto rounded-2xl bg-accent/10 flex items-center justify-center text-accent text-2xl group-hover:scale-110 transition-transform duration-300">
+                    ✦
+                  </div>
                   <h3 className="font-serif text-xl text-black">Clean Design</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">
-                    No clutter, no noise. Every pixel serves a purpose, letting the beauty of fragrance data shine through.
+                    Elegant minimalism. No clutter, no noise — every pixel serves a purpose so fragrances take center stage.
                   </p>
                 </div>
-                <div className="bg-white rounded-2xl p-8 text-center space-y-4 shadow-card">
-                  <div className="w-12 h-12 mx-auto rounded-xl bg-accent/10 flex items-center justify-center text-accent text-xl">⟡</div>
-                  <h3 className="font-serif text-xl text-black">Deep Data</h3>
+
+                <div className="group bg-white rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 text-center space-y-4">
+                  <div className="w-14 h-14 mx-auto rounded-2xl bg-accent/10 flex items-center justify-center text-accent text-2xl group-hover:scale-110 transition-transform duration-300">
+                    ◆
+                  </div>
+                  <h3 className="font-serif text-xl text-black">Scent Pyramids</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">
-                    Scent pyramids, ratings, longevity, sillage — everything a fragrance enthusiast needs, at a glance.
+                    Visualize how fragrances evolve from top to base notes with elegant, interactive pyramids.
                   </p>
                 </div>
-                <div className="bg-white rounded-2xl p-8 text-center space-y-4 shadow-card">
-                  <div className="w-12 h-12 mx-auto rounded-xl bg-accent/10 flex items-center justify-center text-accent text-xl">★</div>
-                  <h3 className="font-serif text-xl text-black">Community Driven</h3>
+
+                <div className="group bg-white rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 text-center space-y-4">
+                  <div className="w-14 h-14 mx-auto rounded-2xl bg-accent/10 flex items-center justify-center text-accent text-2xl group-hover:scale-110 transition-transform duration-300">
+                    ⟡
+                  </div>
+                  <h3 className="font-serif text-xl text-black">Search by Notes</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">
-                    Ratings and votes from a global community of fragrance lovers power our rankings and recommendations.
+                    Find fragrances by notes like vanilla, rose, oud, musk, and more.
                   </p>
                 </div>
               </div>
-            </div>
 
-            {/* Tech Stack */}
-            <div className="border-t border-gray-100 pt-16 text-center space-y-8">
-              <h2 className="font-serif text-3xl text-black">Built With Care</h2>
-              <p className="text-gray-500 max-w-2xl mx-auto">
-                Aromat is a modern web application built with Next.js, styled with Tailwind CSS,
-                and powered by the open-source PerfumAPI database. Fast, responsive, and free to explore.
-              </p>
-              <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
-                <span className="px-5 py-2.5 border border-gray-200 font-mono text-xs rounded-xl">Next.js</span>
-                <span className="px-5 py-2.5 border border-gray-200 font-mono text-xs rounded-xl">Tailwind</span>
-                <span className="px-5 py-2.5 border border-gray-200 font-mono text-xs rounded-xl">PerfumAPI</span>
+              {/* Bottom row — 2 wider cards, centered */}
+              <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+                <div className="group bg-white rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 text-center space-y-4">
+                  <div className="w-14 h-14 mx-auto rounded-2xl bg-accent/10 flex items-center justify-center text-accent text-2xl group-hover:scale-110 transition-transform duration-300">
+                    ❖
+                  </div>
+                  <h3 className="font-serif text-xl text-black">Deep Data</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">
+                    Ratings, longevity, sillage — everything a fragrance enthusiast needs, all at a glance.
+                  </p>
+                </div>
+
+                <div className="group bg-white rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 text-center space-y-4">
+                  <div className="w-14 h-14 mx-auto rounded-2xl bg-accent/10 flex items-center justify-center text-accent text-2xl group-hover:scale-110 transition-transform duration-300">
+                    ★
+                  </div>
+                  <h3 className="font-serif text-xl text-black">Community Driven</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">
+                    Ratings and votes from a global community of fragrance lovers power our rankings.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

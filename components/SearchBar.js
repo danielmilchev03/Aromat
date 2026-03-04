@@ -88,9 +88,13 @@ export default function SearchBar({ initialTab = 'name', initialQuery = '', init
   // ==========================================
   // Name/Brand handlers
   // ==========================================
+  // Brand matches detected from suggestions
+  const [brandMatches, setBrandMatches] = useState([]);
+
   const fetchSuggestions = useCallback(async (value) => {
     if (value.trim().length < 2) {
       setSuggestions([]);
+      setBrandMatches([]);
       setShowSuggestions(false);
       setLoading(false);
       return;
@@ -99,11 +103,26 @@ export default function SearchBar({ initialTab = 'name', initialQuery = '', init
     try {
       const response = await fetch(`/api/search?q=${encodeURIComponent(value)}&limit=7`);
       const data = await response.json();
-      setSuggestions(Array.isArray(data) ? data : []);
+      const results = Array.isArray(data) ? data : [];
+      setSuggestions(results);
+
+      // Detect unique brands that match the query
+      const q = value.toLowerCase().trim();
+      const matchedBrands = new Map();
+      results.forEach((p) => {
+        if (p.brand && p.brand.toLowerCase().includes(q)) {
+          if (!matchedBrands.has(p.brand.toLowerCase())) {
+            matchedBrands.set(p.brand.toLowerCase(), p.brand);
+          }
+        }
+      });
+      setBrandMatches(Array.from(matchedBrands.values()).slice(0, 3));
+
       setShowSuggestions(true);
     } catch (error) {
       console.error('Error fetching suggestions:', error);
       setSuggestions([]);
+      setBrandMatches([]);
     } finally {
       setLoading(false);
     }
@@ -276,6 +295,40 @@ export default function SearchBar({ initialTab = 'name', initialQuery = '', init
                   </div>
                 )}
 
+                {/* Brand matches */}
+                {brandMatches.length > 0 && (
+                  <div className="border-b border-gray-100">
+                    {brandMatches.map((brand) => (
+                      <button
+                        key={brand}
+                        onClick={() => {
+                          router.push(`/brand/${encodeURIComponent(brand)}`);
+                          setShowSuggestions(false);
+                          setQuery('');
+                        }}
+                        className="w-full text-left px-5 py-3.5 hover:bg-accent/5 transition-colors flex items-center gap-3"
+                      >
+                        <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                          <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          </svg>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-serif text-sm text-accent font-medium truncate">
+                            View all <HighlightMatch text={brand} query={query} /> perfumes
+                          </div>
+                          <div className="text-xs text-gray-400 truncate mt-0.5">
+                            Browse the complete {brand} collection
+                          </div>
+                        </div>
+                        <svg className="w-4 h-4 text-accent flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
                 {suggestions.map((perfume, idx) => (
                   <button
                     key={perfume.id || idx}
@@ -302,7 +355,17 @@ export default function SearchBar({ initialTab = 'name', initialQuery = '', init
                         <HighlightMatch text={perfume.name} query={query} />
                       </div>
                       <div className="text-xs text-gray-400 truncate mt-0.5">
-                        <HighlightMatch text={perfume.brand} query={query} />
+                        <span
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            router.push(`/brand/${encodeURIComponent(perfume.brand)}`);
+                            setShowSuggestions(false);
+                            setQuery('');
+                          }}
+                          className="hover:text-accent hover:underline cursor-pointer transition-colors"
+                        >
+                          <HighlightMatch text={perfume.brand} query={query} />
+                        </span>
                       </div>
                     </div>
                     <svg className="w-4 h-4 text-gray-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
