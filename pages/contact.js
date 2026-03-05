@@ -160,7 +160,7 @@ export default function Contact() {
             <p className="text-gray-500 text-base">While you wait for our reply, discover something beautiful.</p>
             <div className="flex flex-wrap justify-center gap-3">
               <Link href="/gallery" className="btn-secondary">Browse Gallery</Link>
-              <Link href="/collections/top-rated" className="btn-primary">Top Rated</Link>
+              <Link href="/gallery" className="btn-primary">Top Rated</Link>
             </div>
           </div>
         </section>

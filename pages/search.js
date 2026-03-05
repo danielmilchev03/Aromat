@@ -171,7 +171,7 @@ export default function SearchResults({ results = [], query = '', note = '', mat
                 {/* Quick links */}
                 <div className="grid sm:grid-cols-3 gap-4">
                   <Link
-                    href="/collections/top-rated"
+                    href="/gallery"
                     className="group p-6 rounded-2xl border border-gray-100 hover:border-accent/30 hover:shadow-gold transition-all duration-300 text-center space-y-3"
                   >
                     <div className="w-10 h-10 mx-auto rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
@@ -182,18 +182,18 @@ export default function SearchResults({ results = [], query = '', note = '', mat
                   </Link>
 
                   <Link
-                    href="/collections/most-popular"
+                    href="/gallery?view=all"
                     className="group p-6 rounded-2xl border border-gray-100 hover:border-accent/30 hover:shadow-gold transition-all duration-300 text-center space-y-3"
                   >
                     <div className="w-10 h-10 mx-auto rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                       <span className="text-accent text-sm">♦</span>
                     </div>
-                    <h4 className="font-serif text-base text-gray-900">Most Popular</h4>
-                    <p className="text-xs text-gray-400 leading-relaxed">Community favourites loved by fragrance enthusiasts.</p>
+                    <h4 className="font-serif text-base text-gray-900">All Perfumes</h4>
+                    <p className="text-xs text-gray-400 leading-relaxed">Browse the full fragrance collection.</p>
                   </Link>
 
                   <Link
-                    href="/collections/new-arrivals"
+                    href="/gallery?view=newarrivals"
                     className="group p-6 rounded-2xl border border-gray-100 hover:border-accent/30 hover:shadow-gold transition-all duration-300 text-center space-y-3"
                   >
                     <div className="w-10 h-10 mx-auto rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">

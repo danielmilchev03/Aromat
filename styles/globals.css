@@ -943,3 +943,85 @@ html.midnight .text-gray-900,
 html.midnight .text-accent {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* =======================================================
+   REVIEW SECTION — theme-aware elements
+   ======================================================= */
+
+/* Selected rating button text (needs dark text on light accent bg) */
+.review-selected {
+  color: #ffffff;
+}
+html.dark .review-selected {
+  color: #0f0f0f;
+}
+html.midnight .review-selected {
+  color: #0c1018;
+}
+
+/* Empty star color */
+.review-star-empty {
+  color: #d1d5db;
+}
+html.dark .review-star-empty {
+  color: #333;
+}
+html.midnight .review-star-empty {
+  color: #253040;
+}
+
+/* SVG ring — track */
+.review-ring-track {
+  stroke: #f3f4f6;
+  transition: stroke 0.3s ease;
+}
+html.dark .review-ring-track {
+  stroke: #2a2a2a;
+}
+html.midnight .review-ring-track {
+  stroke: #1c2a3c;
+}
+
+/* SVG ring — filled arc */
+.review-ring-fill {
+  stroke: #D4AF37;
+  transition: stroke 0.3s ease, stroke-dasharray 1s ease-out;
+}
+html.dark .review-ring-fill {
+  stroke: #C0C5CE;
+}
+html.midnight .review-ring-fill {
+  stroke: #A8B8CC;
+}
+
+/* Textarea */
+.review-textarea {
+  background-color: transparent;
+}
+.review-textarea::placeholder {
+  color: #d1d5db;
+}
+html.dark .review-textarea {
+  background-color: #1a1a1a;
+  color: #e5e5e5;
+}
+html.dark .review-textarea::placeholder {
+  color: #555;
+}
+html.midnight .review-textarea {
+  background-color: #0f1520;
+  color: #d8dee8;
+}
+html.midnight .review-textarea::placeholder {
+  color: #4a5568;
+}
+
+/* Focus ring on textarea */
+html.dark .review-textarea:focus {
+  --tw-ring-color: rgba(192, 197, 206, 0.3);
+  border-color: rgba(192, 197, 206, 0.4);
+}
+html.midnight .review-textarea:focus {
+  --tw-ring-color: rgba(168, 184, 204, 0.3);
+  border-color: rgba(168, 184, 204, 0.4);
+}

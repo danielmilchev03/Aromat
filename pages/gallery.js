@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -10,7 +10,9 @@ import Footer from '../components/Footer';
 
 const VALID_VIEWS = ['toprated', 'newarrivals', 'all'];
 
-export default function Gallery({ topRated = [], allPerfumes = [], newArrivals = [], brands = [] }) {
+const PAGE_SIZE = 24;
+
+export default function Gallery({ topRated = [], allPerfumes: initialAllPerfumes = [], allPerfumesTotal = 0, newArrivals = [], brands = [] }) {
   const router = useRouter();
   const viewFromQuery = typeof router.query.view === 'string' && VALID_VIEWS.includes(router.query.view)
     ? router.query.view
@@ -20,6 +22,41 @@ export default function Gallery({ topRated = [], allPerfumes = [], newArrivals =
   const [displayMode, setDisplayMode] = useState(viewFromQuery);
   const [genderTopRated, setGenderTopRated] = useState(topRated);
   const [loadingTopRated, setLoadingTopRated] = useState(false);
+
+  // Infinite scroll state for "all" view
+  const [allPerfumes, setAllPerfumes] = useState(initialAllPerfumes);
+  const [allTotal, setAllTotal] = useState(allPerfumesTotal);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const loaderRef = useRef(null);
+
+  const hasMore = allPerfumes.length < allTotal;
+
+  const loadMore = useCallback(() => {
+    if (loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    fetch(`/api/fragrances?type=all&limit=${PAGE_SIZE}&offset=${allPerfumes.length}`)
+      .then(res => res.json())
+      .then(data => {
+        const newPerfumes = data.perfumes || data;
+        setAllPerfumes(prev => [...prev, ...newPerfumes]);
+        if (data.total != null) setAllTotal(data.total);
+      })
+      .catch(() => {})
+      .finally(() => setLoadingMore(false));
+  }, [loadingMore, hasMore, allPerfumes.length]);
+
+  // IntersectionObserver to trigger loading more when scrolling near the bottom
+  useEffect(() => {
+    if (displayMode !== 'all') return;
+    const el = loaderRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => { if (entries[0].isIntersecting) loadMore(); },
+      { rootMargin: '400px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [displayMode, loadMore]);
 
   // Sync displayMode when router query becomes available (after hydration)
   useEffect(() => {
@@ -174,7 +211,11 @@ export default function Gallery({ topRated = [], allPerfumes = [], newArrivals =
           <div className="max-w-6xl mx-auto px-6">
             {displayPerfumes.length > 0 ? (
               <>
-                <p className="text-gray-400 text-sm mb-8 text-center">{displayPerfumes.length} fragrances</p>
+                <p className="text-gray-400 text-sm mb-8 text-center">
+                  {displayMode === 'all' && hasMore
+                    ? `${displayPerfumes.length} of ${allTotal} fragrances`
+                    : `${displayPerfumes.length} fragrances`}
+                </p>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {displayPerfumes.map((perfume, idx) => (
                     <div key={perfume.id || idx} className="relative">
@@ -187,7 +228,11 @@ export default function Gallery({ topRated = [], allPerfumes = [], newArrivals =
                     </div>
                   ))}
                 </div>
-
+                {displayMode === 'all' && hasMore && (
+                  <div ref={loaderRef} className="flex justify-center py-10">
+                    {loadingMore && <p className="text-gray-400 text-sm">Loading more fragrances...</p>}
+                  </div>
+                )}
 
               </>
             ) : (
@@ -223,14 +268,16 @@ export async function getServerSideProps() {
   try {
     const topRated = await getTopRatedPerfumes(24);
     const newArrivalsData = await getNewArrivals(24);
-    const allData = await getPerfumes(500, 0);
+    const allData = await getPerfumes(PAGE_SIZE, 0);
     const allPerfumes = allData.perfumes || [];
+    const allPerfumesTotal = allData.total || allPerfumes.length;
     const brands = await getUniqueBrands();
 
     return {
       props: {
         topRated,
         allPerfumes,
+        allPerfumesTotal,
         newArrivals: newArrivalsData,
         brands,
       },

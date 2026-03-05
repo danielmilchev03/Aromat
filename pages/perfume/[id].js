@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { getPerfumeById, searchPerfumes } from '../../lib/api';
 import ScentPyramid from '../../components/ScentPyramid';
+import ReviewSection from '../../components/ReviewSection';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import CollectionButtons from '../../components/CollectionButtons';
@@ -121,14 +122,23 @@ export default function PerfumePage({ perfume, suggestions }) {
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-1.5">
                         <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <span
-                              key={i}
-                              className={`text-lg ${i < Math.floor(rating) ? 'text-accent' : 'text-gray-200'}`}
-                            >
-                              ★
-                            </span>
-                          ))}
+                          {[...Array(5)].map((_, i) => {
+                            const rounded = Math.round(rating * 10) / 10;
+                            const fullStars = Math.floor(rounded);
+                            const hasHalf = (rounded - fullStars) >= 0.5;
+                            if (i < fullStars) {
+                              return <span key={i} className="text-lg text-accent">★</span>;
+                            } else if (i === fullStars && hasHalf) {
+                              return (
+                                <span key={i} className="text-lg relative inline-block">
+                                  <span className="text-gray-200">★</span>
+                                  <span className="absolute left-0 top-0 text-accent overflow-hidden" style={{ width: '0.5em' }}>★</span>
+                                </span>
+                              );
+                            } else {
+                              return <span key={i} className="text-lg text-gray-200">★</span>;
+                            }
+                          })}
                         </div>
                         <span className="text-gray-800 text-lg font-serif ml-2">{rating.toFixed(1)}</span>
                         <span className="text-gray-400 text-sm">/ 5</span>
@@ -224,6 +234,9 @@ export default function PerfumePage({ perfume, suggestions }) {
             </div>
           </section>
         )}
+
+        {/* Reviews & Ratings */}
+        <ReviewSection perfumeId={perfume.id} />
 
         {/* Related Fragrances */}
         {suggestions && suggestions.length > 0 && (

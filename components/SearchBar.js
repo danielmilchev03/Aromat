@@ -241,177 +241,35 @@ export default function SearchBar({ initialTab = 'name', initialQuery = '', init
         </button>
       </div>
 
-      {/* Name/Brand Search */}
-      {activeTab === 'name' && (
-        <div className="relative" ref={wrapperRef}>
-          <form onSubmit={handleSubmit} className="relative" role="search">
-            <div className="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none">
-              <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder="Search by fragrance or brand..."
-              value={query}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-              onFocus={handleFocus}
-              role="combobox"
-              aria-expanded={showSuggestions}
-              aria-autocomplete="list"
-              aria-activedescendant={activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined}
-              className="w-full pl-14 pr-32 py-4 text-base bg-white border border-gray-200 rounded-full shadow-soft focus:border-accent focus:ring-2 focus:ring-accent/15 focus:shadow-gold focus:outline-none transition-all duration-200"
-            />
-            <button
-              type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2.5 bg-accent text-white font-serif text-sm rounded-full hover:bg-accent-600 transition-all duration-200 hover:shadow-gold"
-            >
-              Search
-            </button>
-          </form>
-
-          {/* Autocomplete dropdown */}
-          {showSuggestions && (
-            <div className="absolute top-full left-0 right-0 mt-2 z-50 animate-scale-in">
-              <div
-                className="bg-white border border-gray-200 rounded-2xl shadow-soft-lg max-h-96 overflow-y-auto"
-                role="listbox"
-              >
-                {loading && suggestions.length === 0 && (
-                  <div className="px-6 py-4 text-gray-400 text-sm flex items-center gap-3">
-                    <svg className="animate-spin h-4 w-4 text-accent" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    Searching...
-                  </div>
-                )}
-
-                {!loading && suggestions.length === 0 && query.trim().length >= 2 && (
-                  <div className="px-6 py-4 text-gray-400 text-sm">
-                    No results found for &ldquo;{query}&rdquo;
-                  </div>
-                )}
-
-                {/* Brand matches */}
-                {brandMatches.length > 0 && (
-                  <div className="border-b border-gray-100">
-                    {brandMatches.map((brand) => (
-                      <button
-                        key={brand}
-                        onClick={() => {
-                          router.push(`/brand/${encodeURIComponent(brand)}`);
-                          setShowSuggestions(false);
-                          setQuery('');
-                        }}
-                        className="w-full text-left px-5 py-3.5 hover:bg-accent/5 transition-colors flex items-center gap-3"
-                      >
-                        <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                          <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                          </svg>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="font-serif text-sm text-accent font-medium truncate">
-                            View all <HighlightMatch text={brand} query={query} /> perfumes
-                          </div>
-                          <div className="text-xs text-gray-400 truncate mt-0.5">
-                            Browse the complete {brand} collection
-                          </div>
-                        </div>
-                        <svg className="w-4 h-4 text-accent flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {suggestions.map((perfume, idx) => (
-                  <button
-                    key={perfume.id || idx}
-                    id={`suggestion-${idx}`}
-                    role="option"
-                    aria-selected={idx === activeIndex}
-                    onClick={() => handleSuggestionClick(perfume)}
-                    onMouseEnter={() => setActiveIndex(idx)}
-                    className={`w-full text-left px-5 py-3.5 border-b border-gray-50 last:border-b-0 transition-colors flex items-center gap-4 ${
-                      idx === activeIndex ? 'bg-accent/5' : 'hover:bg-gray-50'
-                    }`}
-                  >
-                    {perfume.image_url ? (
-                      <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-                        <img src={perfume.image_url} alt="" className="w-full h-full object-cover" loading="lazy" />
-                      </div>
-                    ) : (
-                      <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
-                        <span className="text-gray-300 text-xs">✦</span>
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="font-serif text-sm text-gray-900 truncate">
-                        <HighlightMatch text={perfume.name} query={query} />
-                      </div>
-                      <div className="text-xs text-gray-400 truncate mt-0.5">
-                        <span
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            router.push(`/brand/${encodeURIComponent(perfume.brand)}`);
-                            setShowSuggestions(false);
-                            setQuery('');
-                          }}
-                          className="hover:text-accent hover:underline cursor-pointer transition-colors"
-                        >
-                          <HighlightMatch text={perfume.brand} query={query} />
-                        </span>
-                      </div>
-                    </div>
-                    <svg className="w-4 h-4 text-gray-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                ))}
-
-                {suggestions.length > 0 && (
-                  <button
-                    onClick={handleSubmit}
-                    className="w-full text-center px-6 py-3.5 text-sm text-accent hover:bg-accent/5 transition-colors font-medium border-t border-gray-100 rounded-b-2xl"
-                  >
-                    See all results for &ldquo;{query}&rdquo;
-                  </button>
-                )}
-              </div>
-              {suggestions.length > 3 && (
-                <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white/90 to-transparent rounded-b-2xl pointer-events-none" />
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Notes Search */}
-      {activeTab === 'notes' && (
-        <div className="space-y-4">
-          <p className="text-center text-gray-500 text-sm">
-            Search by note like <em className="text-accent">vanilla</em>, <em className="text-accent">rose</em>, or <em className="text-accent">oud</em>
-          </p>
-          <div className="relative" ref={noteWrapperRef}>
-            <form onSubmit={handleNoteSubmit} className="relative">
+      {/* Tab panels – both rendered in a grid so the container always has the height of the tallest panel, preventing layout shift */}
+      <div className="grid [&>*]:col-start-1 [&>*]:row-start-1">
+        {/* Name/Brand Search */}
+        <div
+          className={`transition-opacity duration-200 ${
+            activeTab === 'name' ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
+          }`}
+        >
+          <div className="relative" ref={wrapperRef}>
+            {/* Spacer to match the helper text height in the notes tab */}
+            <p className="text-center text-sm invisible" aria-hidden="true">&nbsp;</p>
+            <form onSubmit={handleSubmit} className="relative" role="search">
               <div className="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none">
                 <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
               <input
+                ref={inputRef}
                 type="text"
-                placeholder="Enter a fragrance note..."
-                value={noteQuery}
-                onChange={handleNoteInputChange}
-                onFocus={() => {
-                  if (noteSuggestions.length > 0) setShowNoteSuggestions(true);
-                }}
+                placeholder="Search by fragrance or brand..."
+                value={query}
+                onChange={handleChange}
+                onKeyDown={handleKeyDown}
+                onFocus={handleFocus}
+                role="combobox"
+                aria-expanded={showSuggestions}
+                aria-autocomplete="list"
+                aria-activedescendant={activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined}
                 className="w-full pl-14 pr-32 py-4 text-base bg-white border border-gray-200 rounded-full shadow-soft focus:border-accent focus:ring-2 focus:ring-accent/15 focus:shadow-gold focus:outline-none transition-all duration-200"
               />
               <button
@@ -420,39 +278,194 @@ export default function SearchBar({ initialTab = 'name', initialQuery = '', init
               >
                 Search
               </button>
+            </form>
 
-              {/* Note autocomplete */}
-              {showNoteSuggestions && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-soft-lg z-50 max-h-64 overflow-y-auto animate-scale-in">
-                  {noteSuggestions.map((note, idx) => (
+            {/* Autocomplete dropdown */}
+            {showSuggestions && (
+              <div className="absolute top-full left-0 right-0 mt-2 z-50 animate-scale-in">
+                <div
+                  className="bg-white border border-gray-200 rounded-2xl shadow-soft-lg max-h-96 overflow-y-auto"
+                  role="listbox"
+                >
+                  {loading && suggestions.length === 0 && (
+                    <div className="px-6 py-4 text-gray-400 text-sm flex items-center gap-3">
+                      <svg className="animate-spin h-4 w-4 text-accent" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Searching...
+                    </div>
+                  )}
+
+                  {!loading && suggestions.length === 0 && query.trim().length >= 2 && (
+                    <div className="px-6 py-4 text-gray-400 text-sm">
+                      No results found for &ldquo;{query}&rdquo;
+                    </div>
+                  )}
+
+                  {/* Brand matches */}
+                  {brandMatches.length > 0 && (
+                    <div className="border-b border-gray-100">
+                      {brandMatches.map((brand) => (
+                        <button
+                          key={brand}
+                          onClick={() => {
+                            router.push(`/brand/${encodeURIComponent(brand)}`);
+                            setShowSuggestions(false);
+                            setQuery('');
+                          }}
+                          className="w-full text-left px-5 py-3.5 hover:bg-accent/5 transition-colors flex items-center gap-3"
+                        >
+                          <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                            <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-serif text-sm text-accent font-medium truncate">
+                              View all <HighlightMatch text={brand} query={query} /> perfumes
+                            </div>
+                            <div className="text-xs text-gray-400 truncate mt-0.5">
+                              Browse the complete {brand} collection
+                            </div>
+                          </div>
+                          <svg className="w-4 h-4 text-accent flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {suggestions.map((perfume, idx) => (
                     <button
-                      key={idx}
-                      type="button"
-                      onMouseDown={() => handleNoteClick(note)}
-                      className="w-full text-left px-6 py-3 hover:bg-accent/5 border-b border-gray-50 last:border-b-0 transition-colors first:rounded-t-2xl last:rounded-b-2xl"
+                      key={perfume.id || idx}
+                      id={`suggestion-${idx}`}
+                      role="option"
+                      aria-selected={idx === activeIndex}
+                      onClick={() => handleSuggestionClick(perfume)}
+                      onMouseEnter={() => setActiveIndex(idx)}
+                      className={`w-full text-left px-5 py-3.5 border-b border-gray-50 last:border-b-0 transition-colors flex items-center gap-4 ${
+                        idx === activeIndex ? 'bg-accent/5' : 'hover:bg-gray-50'
+                      }`}
                     >
-                      <span className="font-serif text-gray-900 text-sm">{note}</span>
+                      {perfume.image_url ? (
+                        <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
+                          <img src={perfume.image_url} alt="" className="w-full h-full object-cover" loading="lazy" />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                          <span className="text-gray-300 text-xs">✦</span>
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="font-serif text-sm text-gray-900 truncate">
+                          <HighlightMatch text={perfume.name} query={query} />
+                        </div>
+                        <div className="text-xs text-gray-400 truncate mt-0.5">
+                          <span
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              router.push(`/brand/${encodeURIComponent(perfume.brand)}`);
+                              setShowSuggestions(false);
+                              setQuery('');
+                            }}
+                            className="hover:text-accent hover:underline cursor-pointer transition-colors"
+                          >
+                            <HighlightMatch text={perfume.brand} query={query} />
+                          </span>
+                        </div>
+                      </div>
+                      <svg className="w-4 h-4 text-gray-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </button>
                   ))}
-                </div>
-              )}
-            </form>
-          </div>
 
-          {/* Popular Notes Pills */}
-          <div className="flex flex-wrap justify-center gap-2">
-            {POPULAR_NOTES.map((note) => (
-              <button
-                key={note}
-                onClick={() => handleNoteClick(note)}
-                className="px-4 py-1.5 border border-gray-200 text-gray-600 text-xs hover:border-accent hover:text-accent hover:bg-accent/5 transition-all duration-200 rounded-full"
-              >
-                {note}
-              </button>
-            ))}
+                  {suggestions.length > 0 && (
+                    <button
+                      onClick={handleSubmit}
+                      className="w-full text-center px-6 py-3.5 text-sm text-accent hover:bg-accent/5 transition-colors font-medium border-t border-gray-100 rounded-b-2xl"
+                    >
+                      See all results for &ldquo;{query}&rdquo;
+                    </button>
+                  )}
+                </div>
+                {suggestions.length > 3 && (
+                  <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white/90 to-transparent rounded-b-2xl pointer-events-none" />
+                )}
+              </div>
+            )}
           </div>
         </div>
-      )}
+
+        {/* Notes Search */}
+        <div
+          className={`transition-opacity duration-200 ${
+            activeTab === 'notes' ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'
+          }`}
+        >
+          <div className="space-y-4">
+            <p className="text-center text-gray-500 text-sm">
+              Search by note like <em className="text-accent">vanilla</em>, <em className="text-accent">rose</em>, or <em className="text-accent">oud</em>
+            </p>
+            <div className="relative" ref={noteWrapperRef}>
+              <form onSubmit={handleNoteSubmit} className="relative">
+                <div className="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Enter a fragrance note..."
+                  value={noteQuery}
+                  onChange={handleNoteInputChange}
+                  onFocus={() => {
+                    if (noteSuggestions.length > 0) setShowNoteSuggestions(true);
+                  }}
+                  className="w-full pl-14 pr-32 py-4 text-base bg-white border border-gray-200 rounded-full shadow-soft focus:border-accent focus:ring-2 focus:ring-accent/15 focus:shadow-gold focus:outline-none transition-all duration-200"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2.5 bg-accent text-white font-serif text-sm rounded-full hover:bg-accent-600 transition-all duration-200 hover:shadow-gold"
+                >
+                  Search
+                </button>
+
+                {/* Note autocomplete */}
+                {showNoteSuggestions && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-soft-lg z-50 max-h-64 overflow-y-auto animate-scale-in">
+                    {noteSuggestions.map((note, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onMouseDown={() => handleNoteClick(note)}
+                        className="w-full text-left px-6 py-3 hover:bg-accent/5 border-b border-gray-50 last:border-b-0 transition-colors first:rounded-t-2xl last:rounded-b-2xl"
+                      >
+                        <span className="font-serif text-gray-900 text-sm">{note}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </form>
+            </div>
+
+            {/* Popular Notes Pills */}
+            <div className="flex flex-wrap justify-center gap-2">
+              {POPULAR_NOTES.map((note) => (
+                <button
+                  key={note}
+                  onClick={() => handleNoteClick(note)}
+                  className="px-4 py-1.5 border border-gray-200 text-gray-600 text-xs hover:border-accent hover:text-accent hover:bg-accent/5 transition-all duration-200 rounded-full"
+                >
+                  {note}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

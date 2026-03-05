@@ -16,7 +16,7 @@ export default function Home({ randomPerfumes = [] }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="min-h-screen bg-white">
+      <main className="min-h-screen bg-white overflow-x-hidden">
         <Navbar />
 
         {/* Hero Section */}
@@ -44,26 +44,12 @@ export default function Home({ randomPerfumes = [] }) {
               <SearchBar />
             </div>
 
-            {/* Feature Pills */}
-            <div className="animate-fade-in-up delay-300 flex items-center justify-center gap-6 flex-wrap">
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                Vast Library
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                Expert Reviews
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                Visual Design
-              </div>
-            </div>
+
           </div>
 
           {/* Scroll indicator */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-float">
-            <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="absolute bottom-8 inset-x-0 flex justify-center animate-float">
+            <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
           </div>

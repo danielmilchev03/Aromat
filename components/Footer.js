@@ -27,9 +27,9 @@ export default function Footer() {
           <div>
             <h4 className="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-medium mb-5">Collections</h4>
             <ul className="space-y-3 text-sm">
-              <li><Link href="/collections/top-rated" className="text-gray-400 hover:text-accent transition-colors duration-200">Top Rated</Link></li>
-              <li><Link href="/collections/most-popular" className="text-gray-400 hover:text-accent transition-colors duration-200">Most Popular</Link></li>
-              <li><Link href="/collections/new-arrivals" className="text-gray-400 hover:text-accent transition-colors duration-200">New Arrivals</Link></li>
+              <li><Link href="/gallery" className="text-gray-400 hover:text-accent transition-colors duration-200">Top Rated</Link></li>
+              <li><Link href="/gallery?view=newarrivals" className="text-gray-400 hover:text-accent transition-colors duration-200">New Arrivals</Link></li>
+              <li><Link href="/gallery?view=all" className="text-gray-400 hover:text-accent transition-colors duration-200">All Perfumes</Link></li>
             </ul>
           </div>
 
